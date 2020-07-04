@@ -1,0 +1,71 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Drawing {
+  data: PaperDrawing!
+  userID: String!
+  drawingID: String!
+}
+
+"""PaperDrawing custom scalar type"""
+scalar PaperDrawing
+
+type Item {
+  data: PaperItem!
+  userID: String!
+  drawingID: String!
+  itemID: String!
+}
+
+"""PaperItem custom scalar type"""
+scalar PaperItem
+
+type Segment {
+  data: PaperSegment!
+  userID: String!
+  drawingID: String!
+  itemID: String!
+  segmentID: String!
+}
+
+"""PaperSegment custom scalar type"""
+scalar PaperSegment
+
+input DrawingInput {
+  data: PaperDrawing!
+  userID: String!
+  drawingID: String!
+}
+
+input ItemInput {
+  data: PaperItem!
+  userID: String!
+  drawingID: String!
+  itemID: String!
+}
+
+input SegmentInput {
+  data: PaperSegment!
+  userID: String!
+  drawingID: String!
+  itemID: String!
+  segmentID: String!
+}
+
+type Query {
+  ping: String!
+}
+
+type Mutation {
+  createDrawing(createDrawingInput: DrawingInput!): Drawing!
+  createItem(createItemInput: ItemInput!): Item!
+  updateItem(updateItemInput: ItemInput!): Item!
+  addSegment(addSegmentInput: SegmentInput!): Segment!
+}
+
+type Subscription {
+  newItemData: Item!
+  pinged: String!
+  newSegmentData: Segment!
+}
