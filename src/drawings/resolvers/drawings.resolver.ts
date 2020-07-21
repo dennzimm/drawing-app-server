@@ -10,7 +10,7 @@ export class DrawingsResolver {
 
   @Query((returns) => Drawing)
   async drawing(@Args() args: DrawingArgs): Promise<Drawing> {
-    return await this.drawingsService.find(args);
+    return await this.drawingsService.findOne(args);
   }
 
   @Mutation((returns) => Drawing)
