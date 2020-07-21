@@ -4,7 +4,9 @@ import { Model } from 'mongoose';
 import { DrawingArgs } from '../dto/args/drawing.args';
 import { CreateDrawingInput } from '../dto/input/create-drawing.input';
 import { Drawing } from '../models/drawing.model';
+import { Item } from '../models/item.model';
 import { Drawing as DrawingDoc } from '../schemas/drawing.schema';
+import { Item as ItemDoc } from '../schemas/item.schema';
 
 @Injectable()
 export class DrawingsService {
@@ -13,12 +15,20 @@ export class DrawingsService {
     private drawingModel: Model<DrawingDoc>,
   ) {}
 
-  drawingReducer(drawing: DrawingDoc): Drawing {
+  drawingReducer(drawingDoc: DrawingDoc): Drawing {
     try {
+      let items: Item[] = [];
+
+      if (drawingDoc.items instanceof ItemDoc) {
+        items = drawingDoc.items.map((itemDoc: ItemDoc) => ({
+          itemID: itemDoc.itemID,
+          itemData: itemDoc.itemData,
+        }));
+      }
+
       return {
-        id: drawing.id,
-        name: drawing.name,
-        items: drawing.items as any,
+        drawingID: drawingDoc.drawingID,
+        items,
       };
     } catch (err) {
       return null;
@@ -31,7 +41,7 @@ export class DrawingsService {
     return this.drawingReducer(createdDrawing);
   }
 
-  async find(conditions: DrawingArgs): Promise<Drawing> {
+  async findOne(conditions: DrawingArgs): Promise<Drawing> {
     const foundDrawing = await this.drawingModel
       .findOne(conditions)
       .populate('items');

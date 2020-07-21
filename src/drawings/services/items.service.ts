@@ -16,24 +16,23 @@ export class ItemsService {
     private itemModel: Model<ItemDoc>,
   ) {}
 
-  itemReducer(item: ItemDoc): Item {
+  itemReducer(itemDoc: ItemDoc): Item {
     try {
       return {
-        id: item.id,
-        name: item.name,
-        data: item.data,
+        itemID: itemDoc.itemID,
+        itemData: itemDoc.itemData,
       };
     } catch (err) {
       return null;
     }
   }
 
-  async addToDrawing(args: AddItemInput): Promise<Item> {
-    const { drawing, name, data } = args;
-    const newItem = await new this.itemModel({ name, data }).save();
+  async create(args: AddItemInput): Promise<Item> {
+    const { drawingID, itemID, itemData } = args;
+    const newItem = await new this.itemModel({ itemID, itemData }).save();
 
     await this.drawingModel.findOneAndUpdate(
-      { name: drawing },
+      { drawingID },
       { $push: { items: newItem._id } },
       { new: true, useFindAndModify: false },
     );
@@ -42,13 +41,13 @@ export class ItemsService {
   }
 
   async delete(args: DeleteItemArgs): Promise<Item> {
-    const { drawing, name } = args;
+    const { drawingID, itemID } = args;
 
-    const foundItem = await this.itemModel.findOne({ name });
+    const foundItem = await this.itemModel.findOne({ itemID });
     await foundItem.remove();
 
     await this.drawingModel.findOneAndUpdate(
-      { name: drawing },
+      { drawingID },
       { $pull: { items: foundItem._id } },
       { new: true, useFindAndModify: false },
     );
