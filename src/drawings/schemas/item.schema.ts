@@ -1,10 +1,17 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { PaperAttributes } from './paper-attributes.schema';
+import { Document } from 'mongoose';
 
 @Schema()
-export class Item extends PaperAttributes {
+export class Item extends Document {
+  @Prop({
+    required: true,
+    unique: true,
+    immutable: true,
+  })
+  itemID: string;
+
   @Prop()
-  data: string;
+  itemData: string;
 }
 
 export const ItemSchema = SchemaFactory.createForClass(Item);
