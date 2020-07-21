@@ -3,52 +3,60 @@
 # ------------------------------------------------------
 
 type Item {
-  id: ID!
-  name: String!
-  data: String!
+  itemID: ID!
+  itemData: String!
 }
 
 type Drawing {
-  id: ID!
-  name: String!
+  drawingID: ID!
   items: [Item!]!
 }
 
 type Segment {
-  drawing: String!
-  name: String!
-  data: String!
+  userID: ID!
+  drawingID: ID!
+  itemID: ID!
+  segmentData: String!
+  strokeColor: [Float!]
+  fillColor: [Float!]
+  strokeWidth: [Int!]
 }
 
 input NewSegmentInput {
-  drawing: String!
-  name: String!
-  data: String!
+  userID: ID!
+  drawingID: ID!
+  itemID: ID!
+  segmentData: String!
+  strokeColor: [Float!]
+  fillColor: [Float!]
+  strokeWidth: [Int!]
 }
 
 type Query {
-  drawing(name: String!): Drawing!
+  drawing(userID: ID!, drawingID: ID!): Drawing!
 }
 
 type Mutation {
   createDrawing(createDrawingData: CreateDrawingInput!): Drawing!
   addItem(addItemData: AddItemInput!): Item!
-  deleteItem(drawing: String!, name: String!): Item!
+  deleteItem(userID: ID!, drawingID: ID!, itemID: ID!): Item!
   publishNewSegment(newSegmentData: NewSegmentInput!): Segment!
 }
 
 input CreateDrawingInput {
-  name: String!
+  userID: ID!
+  drawingID: String!
 }
 
 input AddItemInput {
-  drawing: String!
-  name: String!
-  data: String!
+  userID: ID!
+  drawingID: ID!
+  itemID: ID!
+  itemData: String!
 }
 
 type Subscription {
-  itemAdded: Item!
-  itemRemoved: Item!
-  newSegmentPublished: Segment!
+  itemAdded(userID: ID!, drawingID: ID!): Item!
+  itemRemoved(userID: ID!, drawingID: ID!): Item!
+  newSegmentPublished(userID: ID!, drawingID: ID!): Segment!
 }
