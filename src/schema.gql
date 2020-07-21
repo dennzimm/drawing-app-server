@@ -49,6 +49,6 @@ input AddItemInput {
 
 type Subscription {
   itemAdded: Item!
-  itemDeleted: Item!
+  itemRemoved: Item!
   newSegmentPublished: Segment!
 }

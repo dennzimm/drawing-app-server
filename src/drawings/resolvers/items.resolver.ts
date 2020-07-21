@@ -8,20 +8,19 @@ import { ItemsService } from '../services/items.service';
 
 export enum ItemsSubscriptionsType {
   ITEM_ADDED = 'itemAdded',
-  ITEM_DELETED = 'itemDeleted',
+  ITEM_REMOVED = 'itemRemoved',
 }
 
-@Resolver(of => Item)
+@Resolver((of) => Item)
 export class ItemsResolver {
   constructor(
     @Inject('PUB_SUB') private pubSub: PubSubEngine,
     private itemsService: ItemsService,
   ) {}
 
-  @Mutation(returns => Item)
+  @Mutation((returns) => Item)
   async addItem(@Args('addItemData') addItemData: AddItemInput): Promise<Item> {
-    const addedItemDoc = await this.itemsService.addToDrawing(addItemData);
-    const addedItem = this.itemsService.itemReducer(addedItemDoc);
+    const addedItem = await this.itemsService.addToDrawing(addItemData);
 
     this.pubSub.publish(ItemsSubscriptionsType.ITEM_ADDED, {
       [ItemsSubscriptionsType.ITEM_ADDED]: addedItem,
@@ -30,25 +29,24 @@ export class ItemsResolver {
     return addedItem;
   }
 
-  @Mutation(returns => Item)
+  @Mutation((returns) => Item)
   async deleteItem(@Args() deleteItemArgs: DeleteItemArgs): Promise<Item> {
-    const deletedItemDoc = await this.itemsService.delete(deleteItemArgs);
-    const deletedItem = this.itemsService.itemReducer(deletedItemDoc);
+    const deletedItem = await this.itemsService.delete(deleteItemArgs);
 
-    this.pubSub.publish(ItemsSubscriptionsType.ITEM_DELETED, {
-      [ItemsSubscriptionsType.ITEM_DELETED]: deletedItem,
+    this.pubSub.publish(ItemsSubscriptionsType.ITEM_REMOVED, {
+      [ItemsSubscriptionsType.ITEM_REMOVED]: deletedItem,
     });
 
     return deletedItem;
   }
 
-  @Subscription(returns => Item)
+  @Subscription((returns) => Item)
   itemAdded(): AsyncIterator<PubSubEngine, Item> {
     return this.pubSub.asyncIterator(ItemsSubscriptionsType.ITEM_ADDED);
   }
 
-  @Subscription(returns => Item)
-  itemDeleted(): AsyncIterator<PubSubEngine, Item> {
-    return this.pubSub.asyncIterator(ItemsSubscriptionsType.ITEM_DELETED);
+  @Subscription((returns) => Item)
+  itemRemoved(): AsyncIterator<PubSubEngine, Item> {
+    return this.pubSub.asyncIterator(ItemsSubscriptionsType.ITEM_REMOVED);
   }
 }

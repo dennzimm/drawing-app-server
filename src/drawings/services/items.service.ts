@@ -28,34 +28,31 @@ export class ItemsService {
     }
   }
 
-  addToDrawing(args: AddItemInput): Promise<ItemDoc> {
+  async addToDrawing(args: AddItemInput): Promise<Item> {
     const { drawing, name, data } = args;
-    const newItem = new this.itemModel({ name, data });
+    const newItem = await new this.itemModel({ name, data }).save();
 
-    return this.itemModel.create(newItem).then(docItem => {
-      return this.drawingModel
-        .findOneAndUpdate(
-          { name: drawing },
-          { $push: { items: docItem._id } },
-          { new: true, useFindAndModify: false },
-        )
-        .then(() => docItem);
-    });
+    await this.drawingModel.findOneAndUpdate(
+      { name: drawing },
+      { $push: { items: newItem._id } },
+      { new: true, useFindAndModify: false },
+    );
+
+    return this.itemReducer(newItem);
   }
 
-  delete(args: DeleteItemArgs): Promise<ItemDoc> {
+  async delete(args: DeleteItemArgs): Promise<Item> {
     const { drawing, name } = args;
 
-    return this.itemModel.findOne({ name }).then(docItem => {
-      return docItem.remove().then(() => {
-        return this.drawingModel
-          .findOneAndUpdate(
-            { name: drawing },
-            { $pull: { items: docItem._id } },
-            { new: true, useFindAndModify: false },
-          )
-          .then(() => docItem);
-      });
-    });
+    const foundItem = await this.itemModel.findOne({ name });
+    await foundItem.remove();
+
+    await this.drawingModel.findOneAndUpdate(
+      { name: drawing },
+      { $pull: { items: foundItem._id } },
+      { new: true, useFindAndModify: false },
+    );
+
+    return this.itemReducer(foundItem);
   }
 }

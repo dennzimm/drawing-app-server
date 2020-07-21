@@ -25,13 +25,17 @@ export class DrawingsService {
     }
   }
 
-  async create(args: CreateDrawingInput): Promise<DrawingDoc> {
-    const createdDrawing = new this.drawingModel(args);
+  async create(args: CreateDrawingInput): Promise<Drawing> {
+    const createdDrawing = await new this.drawingModel(args).save();
 
-    return createdDrawing.save();
+    return this.drawingReducer(createdDrawing);
   }
 
-  async find(conditions: DrawingArgs): Promise<DrawingDoc> {
-    return this.drawingModel.findOne(conditions).populate('items');
+  async find(conditions: DrawingArgs): Promise<Drawing> {
+    const foundDrawing = await this.drawingModel
+      .findOne(conditions)
+      .populate('items');
+
+    return this.drawingReducer(foundDrawing);
   }
 }

@@ -7,11 +7,11 @@ export enum SegmentSubscriptionsType {
   NEW_SEGMENT_PUBLISHED = 'newSegmentPublished',
 }
 
-@Resolver(of => Segment)
+@Resolver((of) => Segment)
 export class SegmentsResolver {
   constructor(@Inject('PUB_SUB') private pubSub: PubSubEngine) {}
 
-  @Mutation(returns => Segment)
+  @Mutation((returns) => Segment)
   publishNewSegment(@Args('newSegmentData') newSegmentData: Segment): Segment {
     this.pubSub.publish(SegmentSubscriptionsType.NEW_SEGMENT_PUBLISHED, {
       [SegmentSubscriptionsType.NEW_SEGMENT_PUBLISHED]: newSegmentData,
@@ -20,7 +20,7 @@ export class SegmentsResolver {
     return newSegmentData;
   }
 
-  @Subscription(returns => Segment)
+  @Subscription((returns) => Segment)
   newSegmentPublished(): AsyncIterator<PubSubEngine, Segment> {
     return this.pubSub.asyncIterator(
       SegmentSubscriptionsType.NEW_SEGMENT_PUBLISHED,
