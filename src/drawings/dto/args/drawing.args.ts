@@ -1,7 +1,10 @@
-import { ArgsType, Field } from '@nestjs/graphql';
+import { ArgsType, Field, ID } from '@nestjs/graphql';
 
 @ArgsType()
 export class DrawingArgs {
-  @Field(type => String)
-  name: string;
+  @Field((type) => ID)
+  userID: string;
+
+  @Field((type) => ID)
+  drawingID: string;
 }

@@ -1,10 +1,13 @@
-import { ArgsType, Field } from '@nestjs/graphql';
+import { ArgsType, Field, ID } from '@nestjs/graphql';
 
 @ArgsType()
 export class DeleteItemArgs {
-  @Field(type => String)
-  drawing: string;
+  @Field((type) => ID)
+  userID: string;
 
-  @Field(type => String)
-  name: string;
+  @Field((type) => ID)
+  drawingID: string;
+
+  @Field((type) => ID)
+  itemID: string;
 }

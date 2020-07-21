@@ -1,13 +1,16 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, InputType, ID } from '@nestjs/graphql';
 
 @InputType()
 export class AddItemInput {
-  @Field(type => String)
-  drawing: string;
+  @Field((type) => ID)
+  userID: string;
 
-  @Field(type => String)
-  name: string;
+  @Field((type) => ID)
+  drawingID: string;
 
-  @Field(type => String)
-  data: string;
+  @Field((type) => ID)
+  itemID: string;
+
+  @Field((type) => String)
+  itemData: string;
 }
