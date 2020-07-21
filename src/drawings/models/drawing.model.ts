@@ -1,13 +1,14 @@
-import { Field, InputType, ObjectType } from '@nestjs/graphql';
-import { PaperDrawingData } from '../interfaces/paper-drawing.interface';
-import { PaperDrawingScalar as PaperDrawing } from '../scalars/paper-drawing.scalar';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Item } from './item.model';
 
-@InputType('DrawingInput')
 @ObjectType()
 export class Drawing {
-  userID: string;
-  drawingID: string;
+  @Field(type => ID)
+  id: string;
 
-  @Field(type => PaperDrawing)
-  data: PaperDrawingData;
+  @Field(type => String)
+  name: string;
+
+  @Field(type => [Item], { defaultValue: [] })
+  items: Item[];
 }

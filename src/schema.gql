@@ -2,70 +2,53 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Drawing {
-  data: PaperDrawing!
-  userID: String!
-  drawingID: String!
-}
-
-"""PaperDrawing custom scalar type"""
-scalar PaperDrawing
-
 type Item {
-  data: PaperItem!
-  userID: String!
-  drawingID: String!
-  itemID: String!
+  id: ID!
+  name: String!
+  data: String!
 }
 
-"""PaperItem custom scalar type"""
-scalar PaperItem
+type Drawing {
+  id: ID!
+  name: String!
+  items: [Item!]!
+}
 
 type Segment {
-  data: PaperSegment!
-  userID: String!
-  drawingID: String!
-  itemID: String!
-  segmentID: String!
+  drawing: String!
+  name: String!
+  data: String!
 }
 
-"""PaperSegment custom scalar type"""
-scalar PaperSegment
-
-input DrawingInput {
-  data: PaperDrawing!
-  userID: String!
-  drawingID: String!
-}
-
-input ItemInput {
-  data: PaperItem!
-  userID: String!
-  drawingID: String!
-  itemID: String!
-}
-
-input SegmentInput {
-  data: PaperSegment!
-  userID: String!
-  drawingID: String!
-  itemID: String!
-  segmentID: String!
+input NewSegmentInput {
+  drawing: String!
+  name: String!
+  data: String!
 }
 
 type Query {
-  ping: String!
+  drawing(name: String!): Drawing!
 }
 
 type Mutation {
-  createDrawing(createDrawingInput: DrawingInput!): Drawing!
-  createItem(createItemInput: ItemInput!): Item!
-  updateItem(updateItemInput: ItemInput!): Item!
-  addSegment(addSegmentInput: SegmentInput!): Segment!
+  createDrawing(createDrawingData: CreateDrawingInput!): Drawing!
+  addItem(addItemData: AddItemInput!): Item!
+  deleteItem(drawing: String!, name: String!): Item!
+  publishNewSegment(newSegmentData: NewSegmentInput!): Segment!
+}
+
+input CreateDrawingInput {
+  name: String!
+}
+
+input AddItemInput {
+  drawing: String!
+  name: String!
+  data: String!
 }
 
 type Subscription {
-  newItemData: Item!
-  pinged: String!
-  newSegmentData: Segment!
+  itemAdded: Item!
+  itemDeleted: Item!
+  newSegmentPublished: Segment!
 }

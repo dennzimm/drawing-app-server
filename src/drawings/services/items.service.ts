@@ -1,38 +1,61 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { DeleteItemArgs } from '../dto/args/delete-item.args';
+import { AddItemInput } from '../dto/input/add-item.input';
 import { Item } from '../models/item.model';
-import { Segment } from '../models/segment.model';
+import { Drawing } from '../schemas/drawing.schema';
+import { Item as ItemDoc } from '../schemas/item.schema';
 
 @Injectable()
 export class ItemsService {
-  private logger = new Logger(ItemsService.name);
-  private readonly items = {};
+  constructor(
+    @InjectModel(Drawing.name)
+    private drawingModel: Model<Drawing>,
+    @InjectModel(ItemDoc.name)
+    private itemModel: Model<ItemDoc>,
+  ) {}
 
-  async create(createItemInput: Item): Promise<Item> {
-    const { itemID } = createItemInput;
-
-    this.items[itemID] = createItemInput;
-
-    return createItemInput;
+  itemReducer(item: ItemDoc): Item {
+    try {
+      return {
+        id: item.id,
+        name: item.name,
+        data: item.data,
+      };
+    } catch (err) {
+      return null;
+    }
   }
 
-  async update(updateItemInput: Item): Promise<Item> {
-    const { itemID } = updateItemInput;
+  addToDrawing(args: AddItemInput): Promise<ItemDoc> {
+    const { drawing, name, data } = args;
+    const newItem = new this.itemModel({ name, data });
 
-    const updatedItem = {
-      ...this.items[itemID],
-      ...updateItemInput,
-    };
-
-    this.items[itemID] = updatedItem;
-
-    return updatedItem;
+    return this.itemModel.create(newItem).then(docItem => {
+      return this.drawingModel
+        .findOneAndUpdate(
+          { name: drawing },
+          { $push: { items: docItem._id } },
+          { new: true, useFindAndModify: false },
+        )
+        .then(() => docItem);
+    });
   }
 
-  async addSegment(addSegmentInput: Segment): Promise<Segment> {
-    const { itemID } = addSegmentInput;
+  delete(args: DeleteItemArgs): Promise<ItemDoc> {
+    const { drawing, name } = args;
 
-    this.items[itemID].data[1].segments.push(addSegmentInput);
-
-    return addSegmentInput;
+    return this.itemModel.findOne({ name }).then(docItem => {
+      return docItem.remove().then(() => {
+        return this.drawingModel
+          .findOneAndUpdate(
+            { name: drawing },
+            { $pull: { items: docItem._id } },
+            { new: true, useFindAndModify: false },
+          )
+          .then(() => docItem);
+      });
+    });
   }
 }

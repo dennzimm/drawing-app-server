@@ -1,35 +1,29 @@
-import { Inject, Logger } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 import { Args, Mutation, Resolver, Subscription } from '@nestjs/graphql';
 import { PubSubEngine } from 'apollo-server-express';
 import { Segment } from '../models/segment.model';
-import { SegmentsService } from '../services/segments.service';
+
+export enum SegmentSubscriptionsType {
+  NEW_SEGMENT_PUBLISHED = 'newSegmentPublished',
+}
 
 @Resolver(of => Segment)
 export class SegmentsResolver {
-  private logger = new Logger(SegmentsResolver.name);
-
-  constructor(
-    @Inject('PUB_SUB') private pubSub: PubSubEngine,
-    private readonly segmentsService: SegmentsService,
-  ) {}
+  constructor(@Inject('PUB_SUB') private pubSub: PubSubEngine) {}
 
   @Mutation(returns => Segment)
-  async addSegment(
-    @Args('addSegmentInput') addSegmentInput: Segment,
-  ): Promise<Segment> {
-    const newSegmentData = await this.segmentsService.addSegment(
-      addSegmentInput,
-    );
-
-    this.pubSub.publish('newSegmentData', {
-      newSegmentData,
+  publishNewSegment(@Args('newSegmentData') newSegmentData: Segment): Segment {
+    this.pubSub.publish(SegmentSubscriptionsType.NEW_SEGMENT_PUBLISHED, {
+      [SegmentSubscriptionsType.NEW_SEGMENT_PUBLISHED]: newSegmentData,
     });
 
     return newSegmentData;
   }
 
   @Subscription(returns => Segment)
-  newSegmentData(): AsyncIterator<Segment> {
-    return this.pubSub.asyncIterator('newSegmentData');
+  newSegmentPublished(): AsyncIterator<PubSubEngine, Segment> {
+    return this.pubSub.asyncIterator(
+      SegmentSubscriptionsType.NEW_SEGMENT_PUBLISHED,
+    );
   }
 }

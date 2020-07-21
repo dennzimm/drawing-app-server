@@ -1,14 +1,13 @@
-import { Field, InputType, ObjectType } from '@nestjs/graphql';
-import { PaperItemData } from '../interfaces/paper-item.interface';
-import { PaperItemScalar as PaperItem } from '../scalars/paper-item.scalar';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
 
-@InputType('ItemInput')
 @ObjectType()
 export class Item {
-  userID: string;
-  drawingID: string;
-  itemID: string;
+  @Field(type => ID)
+  id: string;
 
-  @Field(type => PaperItem)
-  data: PaperItemData;
+  @Field(type => String)
+  name: string;
+
+  @Field(type => String)
+  data: string;
 }

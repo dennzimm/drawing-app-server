@@ -1,3 +1,3 @@
-import { PaperItemData } from './paper-item.interface';
+import { PaperLayerData } from './paper-item.interface';
 
-export type PaperDrawingData = [PaperItemData];
+export type PaperDrawingData = [PaperLayerData];

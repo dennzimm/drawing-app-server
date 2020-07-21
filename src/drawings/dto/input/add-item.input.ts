@@ -1,8 +1,7 @@
-import { Field, InputType, ObjectType } from '@nestjs/graphql';
+import { Field, InputType } from '@nestjs/graphql';
 
-@InputType('NewSegmentInput')
-@ObjectType()
-export class Segment {
+@InputType()
+export class AddItemInput {
   @Field(type => String)
   drawing: string;
 

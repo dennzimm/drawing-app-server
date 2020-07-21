@@ -1,44 +1,54 @@
 import { Inject } from '@nestjs/common';
 import { Args, Mutation, Resolver, Subscription } from '@nestjs/graphql';
 import { PubSubEngine } from 'apollo-server-express';
+import { DeleteItemArgs } from '../dto/args/delete-item.args';
+import { AddItemInput } from '../dto/input/add-item.input';
 import { Item } from '../models/item.model';
 import { ItemsService } from '../services/items.service';
+
+export enum ItemsSubscriptionsType {
+  ITEM_ADDED = 'itemAdded',
+  ITEM_DELETED = 'itemDeleted',
+}
 
 @Resolver(of => Item)
 export class ItemsResolver {
   constructor(
     @Inject('PUB_SUB') private pubSub: PubSubEngine,
-    private readonly itemsService: ItemsService,
+    private itemsService: ItemsService,
   ) {}
 
   @Mutation(returns => Item)
-  async createItem(
-    @Args('createItemInput') createItemInput: Item,
-  ): Promise<Item> {
-    const newItemData = await this.itemsService.create(createItemInput);
+  async addItem(@Args('addItemData') addItemData: AddItemInput): Promise<Item> {
+    const addedItemDoc = await this.itemsService.addToDrawing(addItemData);
+    const addedItem = this.itemsService.itemReducer(addedItemDoc);
 
-    this.pubSub.publish('newItemData', {
-      newItemData,
+    this.pubSub.publish(ItemsSubscriptionsType.ITEM_ADDED, {
+      [ItemsSubscriptionsType.ITEM_ADDED]: addedItem,
     });
 
-    return newItemData;
+    return addedItem;
   }
 
   @Mutation(returns => Item)
-  async updateItem(
-    @Args('updateItemInput') updateItemInput: Item,
-  ): Promise<Item> {
-    const newItemData = await this.itemsService.update(updateItemInput);
+  async deleteItem(@Args() deleteItemArgs: DeleteItemArgs): Promise<Item> {
+    const deletedItemDoc = await this.itemsService.delete(deleteItemArgs);
+    const deletedItem = this.itemsService.itemReducer(deletedItemDoc);
 
-    this.pubSub.publish('newItemData', {
-      newItemData,
+    this.pubSub.publish(ItemsSubscriptionsType.ITEM_DELETED, {
+      [ItemsSubscriptionsType.ITEM_DELETED]: deletedItem,
     });
 
-    return newItemData;
+    return deletedItem;
   }
 
   @Subscription(returns => Item)
-  newItemData(): AsyncIterator<Item> {
-    return this.pubSub.asyncIterator('newItemData');
+  itemAdded(): AsyncIterator<PubSubEngine, Item> {
+    return this.pubSub.asyncIterator(ItemsSubscriptionsType.ITEM_ADDED);
+  }
+
+  @Subscription(returns => Item)
+  itemDeleted(): AsyncIterator<PubSubEngine, Item> {
+    return this.pubSub.asyncIterator(ItemsSubscriptionsType.ITEM_DELETED);
   }
 }
