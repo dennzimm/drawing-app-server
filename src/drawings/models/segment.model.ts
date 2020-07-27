@@ -1,8 +1,18 @@
 import { Field, Float, ID, InputType, Int, ObjectType } from '@nestjs/graphql';
 
+@InputType('SegmentDataInput')
+@ObjectType('SegmentData')
+export class SegmentDataObjectType {
+  @Field((type) => Float)
+  x: number;
+
+  @Field((type) => Float)
+  y: number;
+}
+
 @InputType('NewSegmentInput')
-@ObjectType()
-export class Segment {
+@ObjectType('Segment')
+export class SegmentObjectType {
   @Field((type) => ID)
   userID: string;
 
@@ -12,15 +22,15 @@ export class Segment {
   @Field((type) => ID)
   itemID: string;
 
-  @Field((type) => String)
-  segmentData: string;
+  @Field((type) => SegmentDataObjectType)
+  segmentData: SegmentDataObjectType;
 
-  @Field((type) => [Float], { nullable: true })
-  strokeColor?: number[];
+  @Field((type) => String, { nullable: true })
+  strokeColor?: string;
 
   @Field((type) => [Float], { nullable: true })
   fillColor?: number[];
 
-  @Field((type) => [Int], { nullable: true })
+  @Field((type) => Int, { nullable: true })
   strokeWidth?: number;
 }

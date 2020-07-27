@@ -1,11 +1,11 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { Item } from './item.model';
+import { ItemUnion as Item } from '../unions/item.union';
 
-@ObjectType()
-export class Drawing {
+@ObjectType('Drawing')
+export class DrawingObjectType {
   @Field((type) => ID)
   drawingID: string;
 
   @Field((type) => [Item], { defaultValue: [] })
-  items: Item[];
+  items: typeof Item[];
 }
