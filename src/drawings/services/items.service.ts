@@ -3,9 +3,9 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { DeleteItemArgs } from '../dto/args/delete-item.args';
 import { AddItemInput } from '../dto/input/add-item.input';
-import { Item } from '../models/item.model';
 import { Drawing } from '../schemas/drawing.schema';
 import { Item as ItemDoc } from '../schemas/item.schema';
+import { ItemUnion } from '../unions/item.union';
 
 @Injectable()
 export class ItemsService {
@@ -16,18 +16,18 @@ export class ItemsService {
     private itemModel: Model<ItemDoc>,
   ) {}
 
-  itemReducer(itemDoc: ItemDoc): Item {
+  itemReducer(itemDoc: ItemDoc): typeof ItemUnion {
     try {
       return {
         itemID: itemDoc.itemID,
         itemData: itemDoc.itemData,
-      };
+      } as any;
     } catch (err) {
       return null;
     }
   }
 
-  async create(args: AddItemInput): Promise<Item> {
+  async create(args: AddItemInput): Promise<typeof ItemUnion> {
     const { drawingID, itemID, itemData } = args;
     const newItem = await new this.itemModel({ itemID, itemData }).save();
 
@@ -40,7 +40,7 @@ export class ItemsService {
     return this.itemReducer(newItem);
   }
 
-  async delete(args: DeleteItemArgs): Promise<Item> {
+  async delete(args: DeleteItemArgs): Promise<typeof ItemUnion> {
     const { drawingID, itemID } = args;
 
     const foundItem = await this.itemModel.findOne({ itemID });

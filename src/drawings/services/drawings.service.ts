@@ -3,10 +3,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { DrawingArgs } from '../dto/args/drawing.args';
 import { CreateDrawingInput } from '../dto/input/create-drawing.input';
-import { Drawing } from '../models/drawing.model';
-import { Item } from '../models/item.model';
+import { DrawingObjectType } from '../models/drawing.model';
 import { Drawing as DrawingDoc } from '../schemas/drawing.schema';
 import { Item as ItemDoc } from '../schemas/item.schema';
+import { ItemUnion } from '../unions/item.union';
 
 @Injectable()
 export class DrawingsService {
@@ -15,15 +15,18 @@ export class DrawingsService {
     private drawingModel: Model<DrawingDoc>,
   ) {}
 
-  drawingReducer(drawingDoc: DrawingDoc): Drawing {
+  drawingReducer(drawingDoc: DrawingDoc): DrawingObjectType {
     try {
-      let items: Item[] = [];
+      let items: typeof ItemUnion[] = [];
 
       if (drawingDoc.items instanceof ItemDoc) {
-        items = drawingDoc.items.map((itemDoc: ItemDoc) => ({
-          itemID: itemDoc.itemID,
-          itemData: itemDoc.itemData,
-        }));
+        items = drawingDoc.items.map(
+          (itemDoc: ItemDoc) =>
+            ({
+              itemID: itemDoc.itemID,
+              itemData: itemDoc.itemData,
+            } as any),
+        );
       }
 
       return {
@@ -35,13 +38,13 @@ export class DrawingsService {
     }
   }
 
-  async create(args: CreateDrawingInput): Promise<Drawing> {
+  async create(args: CreateDrawingInput): Promise<DrawingObjectType> {
     const createdDrawing = await new this.drawingModel(args).save();
 
     return this.drawingReducer(createdDrawing);
   }
 
-  async findOne(conditions: DrawingArgs): Promise<Drawing> {
+  async findOne(conditions: DrawingArgs): Promise<DrawingObjectType> {
     const foundDrawing = await this.drawingModel
       .findOne(conditions)
       .populate('items');
