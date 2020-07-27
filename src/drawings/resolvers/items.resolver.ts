@@ -23,6 +23,10 @@ export class ItemsResolver {
     private itemsService: ItemsService,
   ) {}
 
+  // --------------------
+  // --- Mutations
+  // --------------------
+
   @Mutation((returns) => ItemUnion)
   async addItem(
     @Args('addItemData') addItemData: AddItemInput,
@@ -43,7 +47,7 @@ export class ItemsResolver {
   async deleteItem(
     @Args() deleteItemArgs: DeleteItemArgs,
   ): Promise<typeof ItemUnion> {
-    const deletedItem = await this.itemsService.delete(deleteItemArgs);
+    const deletedItem = await this.itemsService.deleteOne(deleteItemArgs);
 
     this.pubSub.publish(ItemsSubscriptionsType.ITEM_REMOVED, {
       [ItemsSubscriptionsType.ITEM_REMOVED]: {

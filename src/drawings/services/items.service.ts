@@ -40,7 +40,7 @@ export class ItemsService {
     return this.itemReducer(newItem);
   }
 
-  async delete(args: DeleteItemArgs): Promise<typeof ItemUnion> {
+  async deleteOne(args: DeleteItemArgs): Promise<typeof ItemUnion> {
     const { drawingID, itemID } = args;
 
     const foundItem = await this.itemModel.findOne({ itemID });
