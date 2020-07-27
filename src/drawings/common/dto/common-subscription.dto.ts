@@ -2,7 +2,7 @@ import { ArgsType, Field, ID, InputType } from '@nestjs/graphql';
 
 @InputType('CommonSubscriptionInput')
 @ArgsType()
-export class CommonSubscription {
+export class CommonSubscriptionArgs {
   @Field((type) => ID)
   userID: string;
 
