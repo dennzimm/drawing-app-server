@@ -2,9 +2,19 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Item {
+type SegmentData {
+  x: Float!
+  y: Float!
+}
+
+type Segment {
+  userID: ID!
+  drawingID: ID!
   itemID: ID!
-  itemData: String!
+  segmentData: SegmentData!
+  strokeColor: String
+  fillColor: [Float!]
+  strokeWidth: Int
 }
 
 type Drawing {
@@ -12,24 +22,42 @@ type Drawing {
   items: [Item!]!
 }
 
-type Segment {
-  userID: ID!
-  drawingID: ID!
+union Item = Path | Shape
+
+type Path {
   itemID: ID!
-  segmentData: String!
+  applyMatrix: Boolean!
   strokeColor: [Float!]
   fillColor: [Float!]
   strokeWidth: [Int!]
+  segments: [[[Float!]!]!]!
+}
+
+type Shape {
+  itemID: ID!
+  applyMatrix: Boolean!
+  strokeColor: [Float!]
+  fillColor: [Float!]
+  strokeWidth: [Int!]
+  type: String!
+  size: [Float!]!
+  radius: [Float!]!
+  matrix: [Float!]!
+}
+
+input SegmentDataInput {
+  x: Float!
+  y: Float!
 }
 
 input NewSegmentInput {
   userID: ID!
   drawingID: ID!
   itemID: ID!
-  segmentData: String!
-  strokeColor: [Float!]
+  segmentData: SegmentDataInput!
+  strokeColor: String
   fillColor: [Float!]
-  strokeWidth: [Int!]
+  strokeWidth: Int
 }
 
 type Query {
@@ -58,5 +86,7 @@ input AddItemInput {
 type Subscription {
   itemAdded(userID: ID!, drawingID: ID!): Item!
   itemRemoved(userID: ID!, drawingID: ID!): Item!
-  newSegmentPublished(userID: ID!, drawingID: ID!): Segment!
+  itemDataPublished(userID: ID!, drawingID: ID!): PublishedItemData!
 }
+
+union PublishedItemData = Segment
