@@ -1,22 +1,22 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { DrawingArgs } from '../dto/args/drawing.args';
 import { CreateDrawingInput } from '../dto/input/create-drawing.input';
-import { Drawing } from '../models/drawing.model';
+import { DrawingObjectType } from '../models/drawing.model';
 import { DrawingsService } from '../services/drawings.service';
 
-@Resolver((of) => Drawing)
+@Resolver((of) => DrawingObjectType)
 export class DrawingsResolver {
   constructor(private drawingsService: DrawingsService) {}
 
-  @Query((returns) => Drawing)
-  async drawing(@Args() args: DrawingArgs): Promise<Drawing> {
+  @Query((returns) => DrawingObjectType)
+  async drawing(@Args() args: DrawingArgs): Promise<DrawingObjectType> {
     return await this.drawingsService.findOne(args);
   }
 
-  @Mutation((returns) => Drawing)
+  @Mutation((returns) => DrawingObjectType)
   async createDrawing(
     @Args('createDrawingData') createDrawingData: CreateDrawingInput,
-  ): Promise<Drawing> {
+  ): Promise<DrawingObjectType> {
     return await this.drawingsService.create(createDrawingData);
   }
 }

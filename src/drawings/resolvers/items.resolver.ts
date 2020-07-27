@@ -1,30 +1,32 @@
 import { Inject } from '@nestjs/common';
 import { Args, Mutation, Resolver, Subscription } from '@nestjs/graphql';
 import { PubSubEngine } from 'apollo-server-express';
+import { CommonSubscriptionArgs } from '../common/dto/common-subscription.dto';
 import { drawingFilter } from '../common/filters/drawing.filter';
 import { userFilter } from '../common/filters/user.filter';
 import { withFilters } from '../common/filters/with-filters';
 import { DeleteItemArgs } from '../dto/args/delete-item.args';
-import { ItemAddedArgs } from '../dto/args/item-added.args';
-import { ItemRemovedArgs } from '../dto/args/item-removed.args';
 import { AddItemInput } from '../dto/input/add-item.input';
-import { Item } from '../models/item.model';
 import { ItemsService } from '../services/items.service';
+import { ItemUnion, PublishedItemDataUnion } from '../unions/item.union';
 
 export enum ItemsSubscriptionsType {
   ITEM_ADDED = 'itemAdded',
   ITEM_REMOVED = 'itemRemoved',
+  ITEM_DATA_PUBLISHED = 'itemDataPublished',
 }
 
-@Resolver((of) => Item)
+@Resolver((of) => ItemUnion)
 export class ItemsResolver {
   constructor(
     @Inject('PUB_SUB') private pubSub: PubSubEngine,
     private itemsService: ItemsService,
   ) {}
 
-  @Mutation((returns) => Item)
-  async addItem(@Args('addItemData') addItemData: AddItemInput): Promise<Item> {
+  @Mutation((returns) => ItemUnion)
+  async addItem(
+    @Args('addItemData') addItemData: AddItemInput,
+  ): Promise<typeof ItemUnion> {
     const addedItem = await this.itemsService.create(addItemData);
 
     this.pubSub.publish(ItemsSubscriptionsType.ITEM_ADDED, {
@@ -37,8 +39,10 @@ export class ItemsResolver {
     return addedItem;
   }
 
-  @Mutation((returns) => Item)
-  async deleteItem(@Args() deleteItemArgs: DeleteItemArgs): Promise<Item> {
+  @Mutation((returns) => ItemUnion)
+  async deleteItem(
+    @Args() deleteItemArgs: DeleteItemArgs,
+  ): Promise<typeof ItemUnion> {
     const deletedItem = await this.itemsService.delete(deleteItemArgs);
 
     this.pubSub.publish(ItemsSubscriptionsType.ITEM_REMOVED, {
@@ -51,10 +55,12 @@ export class ItemsResolver {
     return deletedItem;
   }
 
-  @Subscription((returns) => Item, {
+  // TODO: Refactor Subscriptions with operation arg
+
+  @Subscription((returns) => ItemUnion, {
     filter: (
-      payload: Record<'itemAdded', AddItemInput & Item>,
-      variables: ItemAddedArgs,
+      payload: Record<'itemAdded', AddItemInput & typeof ItemUnion>,
+      variables: CommonSubscriptionArgs,
     ) =>
       withFilters({
         payload,
@@ -64,15 +70,15 @@ export class ItemsResolver {
       }),
   })
   itemAdded(
-    @Args() itemAddedArgs: ItemAddedArgs,
-  ): AsyncIterator<PubSubEngine, ItemAddedArgs & Item> {
+    @Args() itemAddedArgs: CommonSubscriptionArgs,
+  ): AsyncIterator<PubSubEngine, CommonSubscriptionArgs & typeof ItemUnion> {
     return this.pubSub.asyncIterator(ItemsSubscriptionsType.ITEM_ADDED);
   }
 
-  @Subscription((returns) => Item, {
+  @Subscription((returns) => ItemUnion, {
     filter: (
-      payload: Record<'itemRemoved', ItemRemovedArgs & Item>,
-      variables: ItemRemovedArgs,
+      payload: Record<'itemRemoved', CommonSubscriptionArgs & typeof ItemUnion>,
+      variables: CommonSubscriptionArgs,
     ) =>
       withFilters({
         payload,
@@ -82,8 +88,31 @@ export class ItemsResolver {
       }),
   })
   itemRemoved(
-    @Args() itemRemovedArgs: ItemRemovedArgs,
-  ): AsyncIterator<PubSubEngine, ItemRemovedArgs & Item> {
+    @Args() itemRemovedArgs: CommonSubscriptionArgs,
+  ): AsyncIterator<PubSubEngine, CommonSubscriptionArgs & typeof ItemUnion> {
     return this.pubSub.asyncIterator(ItemsSubscriptionsType.ITEM_REMOVED);
+  }
+
+  // --------------------
+  // --- Subscriptions
+  // --------------------
+  @Subscription((returns) => PublishedItemDataUnion, {
+    filter: (
+      payload: Record<'itemDataPublished', typeof PublishedItemDataUnion>,
+      variables: CommonSubscriptionArgs,
+    ) =>
+      withFilters({
+        payload,
+        variables,
+        key: 'itemDataPublished',
+        filters: [userFilter, drawingFilter],
+      }),
+  })
+  itemDataPublished(
+    @Args() itemDataPublishedArgs: CommonSubscriptionArgs,
+  ): AsyncIterator<PubSubEngine, typeof PublishedItemDataUnion> {
+    return this.pubSub.asyncIterator(
+      ItemsSubscriptionsType.ITEM_DATA_PUBLISHED,
+    );
   }
 }
