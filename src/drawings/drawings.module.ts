@@ -3,8 +3,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { helpers } from './helpers';
 import { providers } from './providers';
 import { resolvers } from './resolvers';
-import { services } from './services';
 import { mongooseModuleSchemas } from './schemas';
+import { services } from './services';
 
 @Module({
   imports: [MongooseModule.forFeature(mongooseModuleSchemas)],
