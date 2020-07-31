@@ -4,4 +4,8 @@ export default () => ({
   mongoose: {
     uri: process.env.MONGOOSE_URI,
   },
+  jwt: {
+    secret: process.env.JWT_SECRET,
+    signOptions: { expiresIn: '24h' },
+  },
 });
