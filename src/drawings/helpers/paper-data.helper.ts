@@ -1,21 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import {
-  arrayContains,
-  arrayMinSize,
-  isArray,
-  isEmpty,
-  isJSON,
-} from 'class-validator';
+import { isEmpty, isJSON } from 'class-validator';
 import { Kind, ValueNode } from 'graphql';
-import { PaperDrawingData } from 'src/drawings/interfaces/paper-drawing.interface';
-import {
-  PaperItemData,
-  PaperItemTypes,
-} from 'src/drawings/interfaces/paper-item.interface';
-import {
-  PaperSegmentData,
-  PaperSegmentTypes,
-} from 'src/drawings/interfaces/paper-segment.interface';
 
 type Validator = (value: unknown) => boolean;
 
