@@ -7,6 +7,7 @@ import config from './config/config';
 import { MongooseConfigService } from './config/mongoose.config';
 import { DrawingsModule } from './drawings/drawings.module';
 import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { UsersModule } from './users/users.module';
       load: [config],
     }),
     GraphQLModule.forRoot({
+      context: ({ req }) => ({ req }),
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       installSubscriptionHandlers: true,
     }),
@@ -24,6 +26,7 @@ import { UsersModule } from './users/users.module';
     }),
     DrawingsModule,
     UsersModule,
+    AuthModule,
   ],
 })
 export class AppModule {}
