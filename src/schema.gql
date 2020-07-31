@@ -45,6 +45,12 @@ type Shape {
   matrix: [Float!]!
 }
 
+type User {
+  userId: String!
+  username: String!
+  accessToken: String!
+}
+
 input SegmentDataInput {
   x: Float!
   y: Float!
@@ -62,6 +68,7 @@ input NewSegmentInput {
 
 type Query {
   drawing(userID: ID!, drawingID: ID!): Drawing!
+  whoAmI: User!
 }
 
 type Mutation {
@@ -69,6 +76,7 @@ type Mutation {
   addItem(addItemData: AddItemInput!): Item!
   deleteItem(userID: ID!, drawingID: ID!, itemID: ID!): Item!
   publishNewSegment(newSegmentData: NewSegmentInput!): Segment!
+  login(username: ID!, password: String!): User
 }
 
 input CreateDrawingInput {
