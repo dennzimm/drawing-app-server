@@ -1,9 +1,66 @@
-version: '3'
+version: '3.7'
 
 services:
-  mongodb:
-    image: mongo:latest
-    environment:
-      - MONGODB_DATABASE="test"
+  main:
+    container_name: main
+    build:
+      context: .
+      target: development
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
     ports:
-      - 27017:27017
+      - ${SERVER_PORT}:${SERVER_PORT}
+      - 9229:9229
+    command: yarn run start:dev
+    env_file:
+      - .env
+    networks:
+      - webnet
+    depends_on:
+      - redis
+      - postgres
+
+  redis:
+    container_name: redis
+    image: redis:5
+    networks:
+      - webnet
+
+  postgres:
+    container_name: postgres
+    image: postgres:latest
+    ports:
+      - 5432:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    env_file:
+      - docker.env
+    networks:
+      - webnet
+    restart: unless-stopped
+
+  pgadmin:
+    links:
+      - postgres:postgres
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    ports:
+      - '8080:80'
+    volumes:
+      - pgadmindata:/var/lib/pgadmin
+    env_file:
+      - docker.env
+    networks:
+      - webnet
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+networks:
+  webnet:
+    driver: bridge
+
+volumes:
+  pgdata:
+  pgadmindata:

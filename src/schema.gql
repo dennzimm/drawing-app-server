@@ -2,14 +2,22 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Item {
+  id: ID!
+  data: String!
+}
+
+type Drawing {
+  id: ID!
+  items: [Item!]!
+}
+
 type SegmentData {
   x: Float!
   y: Float!
 }
 
 type Segment {
-  userID: ID!
-  drawingID: ID!
   itemID: ID!
   segmentData: SegmentData!
   strokeColor: String
@@ -17,38 +25,15 @@ type Segment {
   strokeWidth: Int
 }
 
-type Drawing {
-  drawingID: ID!
-  items: [Item!]!
+type ItemMutationPayload {
+  mutation: MutationType!
+  node: Item!
 }
 
-union Item = Path | Shape
-
-type Path {
-  itemID: ID!
-  applyMatrix: Boolean!
-  strokeColor: [Float!]
-  fillColor: [Float!]
-  strokeWidth: [Int!]
-  segments: [[[Float!]!]!]!
-}
-
-type Shape {
-  itemID: ID!
-  applyMatrix: Boolean!
-  strokeColor: [Float!]
-  fillColor: [Float!]
-  strokeWidth: [Int!]
-  type: String!
-  size: [Float!]!
-  radius: [Float!]!
-  matrix: [Float!]!
-}
-
-type User {
-  userId: String!
-  username: String!
-  accessToken: String!
+enum MutationType {
+  CREATED
+  UPDATED
+  DELETED
 }
 
 input SegmentDataInput {
@@ -67,34 +52,37 @@ input NewSegmentInput {
 }
 
 type Query {
-  drawing(userID: ID!, drawingID: ID!): Drawing!
-  whoAmI: User!
+  drawings: [Drawing!]!
+  drawing(userID: ID!, id: ID!): Drawing!
+  isAppOnline: Boolean!
 }
 
 type Mutation {
   createDrawing(createDrawingData: CreateDrawingInput!): Drawing!
-  addItem(addItemData: AddItemInput!): Item!
+  createItem(createItemData: CreateItemInput!): Item!
   deleteItem(userID: ID!, drawingID: ID!, itemID: ID!): Item!
   publishNewSegment(newSegmentData: NewSegmentInput!): Segment!
-  login(username: ID!, password: String!): User
 }
 
 input CreateDrawingInput {
   userID: ID!
-  drawingID: String!
+  id: ID!
 }
 
-input AddItemInput {
+input CreateItemInput {
   userID: ID!
   drawingID: ID!
-  itemID: ID!
-  itemData: String!
+  id: ID!
+  data: String!
 }
 
 type Subscription {
-  itemAdded(userID: ID!, drawingID: ID!): Item!
-  itemRemoved(userID: ID!, drawingID: ID!): Item!
-  itemDataPublished(userID: ID!, drawingID: ID!): PublishedItemData!
+  drawingDataPublished(userID: ID!, drawingID: ID!): PublishedDrawingData!
+  itemMutated(userID: ID!, drawingID: ID!): ItemMutationPayload!
 }
 
-union PublishedItemData = Segment
+union PublishedDrawingData = NewSegmentPayload
+
+type NewSegmentPayload {
+  node: Segment!
+}

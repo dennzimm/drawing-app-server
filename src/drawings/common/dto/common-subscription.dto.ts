@@ -1,11 +1,8 @@
-import { ArgsType, Field, ID, InputType } from '@nestjs/graphql';
+import { ArgsType, InputType } from '@nestjs/graphql';
+import { CommonDrawingArgs } from './common-drawing.dto';
 
-@InputType('CommonSubscriptionInput')
 @ArgsType()
-export class CommonSubscriptionArgs {
-  @Field((type) => ID)
-  userID: string;
+export class CommonSubscriptionArgs extends CommonDrawingArgs {}
 
-  @Field((type) => ID)
-  drawingID: string;
-}
+@InputType()
+export class CommonSubscriptionInput extends CommonDrawingArgs {}

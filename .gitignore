@@ -1,6 +1,6 @@
 # env
-.env*
-!.env.sample
+*.env*
+!*.env.sample
 
 # compiled output
 /dist

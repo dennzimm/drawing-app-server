@@ -1,54 +1,71 @@
-import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { DrawingArgs } from '../dto/args/drawing.args';
-import { CreateDrawingInput } from '../dto/input/create-drawing.input';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { from } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { Repository } from 'typeorm';
+import Drawing from '../entities/drawing.entity';
+import Item from '../entities/item.entity';
+import { CreateDrawingProps } from '../interfaces/drawing.types';
 import { DrawingObjectType } from '../models/drawing.model';
-import { Drawing as DrawingDoc } from '../schemas/drawing.schema';
-import { Item as ItemDoc } from '../schemas/item.schema';
-import { ItemUnion } from '../unions/item.union';
+import { ItemObjectType } from '../models/item.model';
 
 @Injectable()
 export class DrawingsService {
   constructor(
-    @InjectModel(DrawingDoc.name)
-    private drawingModel: Model<DrawingDoc>,
+    @InjectRepository(Drawing)
+    private drawingsRepository: Repository<Drawing>,
   ) {}
 
-  drawingReducer(drawingDoc: DrawingDoc): DrawingObjectType {
-    try {
-      let items: typeof ItemUnion[] = [];
+  async findAll(): Promise<DrawingObjectType[]> {
+    return from(this.drawingsRepository.find())
+      .pipe(map(drawing => drawing.map(this.drawingReducer)))
+      .toPromise();
+  }
 
-      if (drawingDoc.items instanceof ItemDoc) {
-        items = drawingDoc.items.map(
-          (itemDoc: ItemDoc) =>
-            ({
-              itemID: itemDoc.itemID,
-              itemData: itemDoc.itemData,
-            } as any),
-        );
-      }
+  async findById(id: string): Promise<DrawingObjectType> {
+    const drawing = await this.drawingsRepository.findOne({ id });
 
-      return {
-        drawingID: drawingDoc.drawingID,
-        items,
-      };
-    } catch (err) {
-      return null;
+    if (!drawing) {
+      throw new NotFoundException(name);
     }
+
+    return this.drawingReducer(drawing);
   }
 
-  async create(args: CreateDrawingInput): Promise<DrawingObjectType> {
-    const createdDrawing = await new this.drawingModel(args).save();
+  async create(props: CreateDrawingProps): Promise<DrawingObjectType> {
+    const { drawingData } = props;
+    const newDrawing = await this.drawingsRepository.create(drawingData);
 
-    return this.drawingReducer(createdDrawing);
+    return from(this.drawingsRepository.save(newDrawing))
+      .pipe(map(drawing => this.drawingReducer(drawing)))
+      .toPromise();
   }
 
-  async findOne(conditions: DrawingArgs): Promise<DrawingObjectType> {
-    const foundDrawing = await this.drawingModel
-      .findOne(conditions)
-      .populate('items');
+  // async update(id: number, drawing: any) {
+  //   await this.drawingsRepository.update(id, drawing);
+  //   const updatedDrawing = await this.drawingsRepository.findOne(id);
 
-    return this.drawingReducer(foundDrawing);
+  //   if (!updatedDrawing) {
+  //     throw new NotFoundException(name);
+  //   }
+
+  //   return updatedDrawing;
+  // }
+
+  private drawingReducer(drawing: Drawing): DrawingObjectType {
+    let items: ItemObjectType[] = [];
+
+    items = drawing.items.map((item: Item) => {
+      return {
+        drawingID: drawing.id,
+        id: item.id,
+        data: item.data,
+      };
+    });
+
+    return {
+      id: drawing.id,
+      items,
+    };
   }
 }

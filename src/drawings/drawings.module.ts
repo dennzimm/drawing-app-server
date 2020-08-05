@@ -1,13 +1,21 @@
 import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
-import { helpers } from './helpers';
-import { providers } from './providers';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { PubSub } from 'apollo-server-express';
+import Drawing from './entities/drawing.entity';
+import Item from './entities/item.entity';
 import { resolvers } from './resolvers';
-import { mongooseModuleSchemas } from './schemas';
 import { services } from './services';
 
 @Module({
-  imports: [MongooseModule.forFeature(mongooseModuleSchemas)],
-  providers: [...helpers, ...providers, ...resolvers, ...services],
+  imports: [TypeOrmModule.forFeature([Drawing, Item])],
+  controllers: [],
+  providers: [
+    {
+      provide: 'PUB_SUB',
+      useValue: new PubSub(),
+    },
+    ...services,
+    ...resolvers,
+  ],
 })
 export class DrawingsModule {}

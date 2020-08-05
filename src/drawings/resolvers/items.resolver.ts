@@ -1,122 +1,85 @@
 import { Inject } from '@nestjs/common';
 import { Args, Mutation, Resolver, Subscription } from '@nestjs/graphql';
 import { PubSubEngine } from 'apollo-server-express';
-import { CommonSubscriptionArgs } from '../common/dto/common-subscription.dto';
 import { drawingFilter } from '../common/filters/drawing.filter';
 import { userFilter } from '../common/filters/user.filter';
 import { withFilters } from '../common/filters/with-filters';
-import { DeleteItemArgs } from '../dto/args/delete-item.args';
-import { AddItemInput } from '../dto/input/add-item.input';
+import { DeleteItemArgs, ItemMutatedArgs } from '../dto/item/item.args';
+import { ItemMutationPayload } from '../dto/item/item.dto';
+import { CreateItemInput } from '../dto/item/item.input';
+import { ItemSubscriptionType } from '../enums/item.enum';
+import { MutationType } from '../enums/mutation.enum';
+import { ItemObjectType as Item } from '../models/item.model';
 import { ItemsService } from '../services/items.service';
-import { ItemUnion, PublishedItemDataUnion } from '../unions/item.union';
 
-export enum ItemsSubscriptionsType {
-  ITEM_ADDED = 'itemAdded',
-  ITEM_REMOVED = 'itemRemoved',
-  ITEM_DATA_PUBLISHED = 'itemDataPublished',
-}
-
-@Resolver((of) => ItemUnion)
+@Resolver(of => Item)
 export class ItemsResolver {
   constructor(
     @Inject('PUB_SUB') private pubSub: PubSubEngine,
     private itemsService: ItemsService,
   ) {}
 
-  // --------------------
-  // --- Mutations
-  // --------------------
+  @Mutation(returns => Item)
+  async createItem(
+    @Args('createItemData') createItemData: CreateItemInput,
+  ): Promise<Item> {
+    const { drawingID, userID, ...itemData } = createItemData;
+    const newItem = await this.itemsService.create({
+      drawingID,
+      itemData,
+    });
 
-  @Mutation((returns) => ItemUnion)
-  async addItem(
-    @Args('addItemData') addItemData: AddItemInput,
-  ): Promise<typeof ItemUnion> {
-    const addedItem = await this.itemsService.create(addItemData);
-
-    this.pubSub.publish(ItemsSubscriptionsType.ITEM_ADDED, {
-      [ItemsSubscriptionsType.ITEM_ADDED]: {
-        ...addItemData,
-        ...addedItem,
+    this.itemsService.publishItemMutation({
+      mutation: MutationType.CREATED,
+      payload: {
+        node: newItem,
+        variables: {
+          drawingID,
+          userID,
+        },
       },
     });
 
-    return addedItem;
+    return newItem;
   }
 
-  @Mutation((returns) => ItemUnion)
-  async deleteItem(
-    @Args() deleteItemArgs: DeleteItemArgs,
-  ): Promise<typeof ItemUnion> {
-    const deletedItem = await this.itemsService.deleteOne(deleteItemArgs);
+  @Mutation(returns => Item)
+  async deleteItem(@Args() deleteItemArgs: DeleteItemArgs): Promise<Item> {
+    const { drawingID, userID, itemID } = deleteItemArgs;
+    const deletedItem = await this.itemsService.deleteOne({
+      drawingID,
+      itemID,
+    });
 
-    this.pubSub.publish(ItemsSubscriptionsType.ITEM_REMOVED, {
-      [ItemsSubscriptionsType.ITEM_REMOVED]: {
-        ...deleteItemArgs,
-        ...deletedItem,
+    this.itemsService.publishItemMutation({
+      mutation: MutationType.DELETED,
+      payload: {
+        node: deletedItem,
+        variables: {
+          drawingID,
+          userID,
+        },
       },
     });
 
     return deletedItem;
   }
 
-  // TODO: Refactor Subscriptions with operation arg
-
-  @Subscription((returns) => ItemUnion, {
+  @Subscription(returns => ItemMutationPayload, {
     filter: (
-      payload: Record<'itemAdded', AddItemInput & typeof ItemUnion>,
-      variables: CommonSubscriptionArgs,
+      payload: Record<ItemSubscriptionType.ITEM_MUTATED, ItemMutationPayload>,
+      variables: ItemMutatedArgs,
     ) =>
       withFilters({
         payload,
         variables,
-        key: 'itemAdded',
+        key: ItemSubscriptionType.ITEM_MUTATED,
         filters: [userFilter, drawingFilter],
       }),
   })
-  itemAdded(
-    @Args() itemAddedArgs: CommonSubscriptionArgs,
-  ): AsyncIterator<PubSubEngine, CommonSubscriptionArgs & typeof ItemUnion> {
-    return this.pubSub.asyncIterator(ItemsSubscriptionsType.ITEM_ADDED);
-  }
-
-  @Subscription((returns) => ItemUnion, {
-    filter: (
-      payload: Record<'itemRemoved', CommonSubscriptionArgs & typeof ItemUnion>,
-      variables: CommonSubscriptionArgs,
-    ) =>
-      withFilters({
-        payload,
-        variables,
-        key: 'itemRemoved',
-        filters: [userFilter, drawingFilter],
-      }),
-  })
-  itemRemoved(
-    @Args() itemRemovedArgs: CommonSubscriptionArgs,
-  ): AsyncIterator<PubSubEngine, CommonSubscriptionArgs & typeof ItemUnion> {
-    return this.pubSub.asyncIterator(ItemsSubscriptionsType.ITEM_REMOVED);
-  }
-
-  // --------------------
-  // --- Subscriptions
-  // --------------------
-  @Subscription((returns) => PublishedItemDataUnion, {
-    filter: (
-      payload: Record<'itemDataPublished', typeof PublishedItemDataUnion>,
-      variables: CommonSubscriptionArgs,
-    ) =>
-      withFilters({
-        payload,
-        variables,
-        key: 'itemDataPublished',
-        filters: [userFilter, drawingFilter],
-      }),
-  })
-  itemDataPublished(
-    @Args() itemDataPublishedArgs: CommonSubscriptionArgs,
-  ): AsyncIterator<PubSubEngine, typeof PublishedItemDataUnion> {
-    return this.pubSub.asyncIterator(
-      ItemsSubscriptionsType.ITEM_DATA_PUBLISHED,
-    );
+  itemMutated(
+    @Args() itemMutatedArgs: ItemMutatedArgs,
+  ): AsyncIterator<PubSubEngine, ItemMutationPayload> {
+    return this.pubSub.asyncIterator(ItemSubscriptionType.ITEM_MUTATED);
   }
 }

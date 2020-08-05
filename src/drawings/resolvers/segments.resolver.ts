@@ -1,19 +1,23 @@
-import { Inject } from '@nestjs/common';
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
-import { PubSubEngine } from 'apollo-server-express';
-import { SegmentObjectType } from '../models/segment.model';
-import { ItemsSubscriptionsType } from './items.resolver';
+import { Segment } from '../models/segment.model';
+import { SegmentsService } from '../services/segments.service';
 
-@Resolver((of) => SegmentObjectType)
+@Resolver(of => Segment)
 export class SegmentsResolver {
-  constructor(@Inject('PUB_SUB') private pubSub: PubSubEngine) {}
+  constructor(private segmentsService: SegmentsService) {}
 
-  @Mutation((returns) => SegmentObjectType)
-  publishNewSegment(
-    @Args('newSegmentData') newSegmentData: SegmentObjectType,
-  ): SegmentObjectType {
-    this.pubSub.publish(ItemsSubscriptionsType.ITEM_DATA_PUBLISHED, {
-      [ItemsSubscriptionsType.ITEM_DATA_PUBLISHED]: newSegmentData,
+  @Mutation(returns => Segment)
+  publishNewSegment(@Args('newSegmentData') newSegmentData: Segment): Segment {
+    const { drawingID, userID, ...newSegment } = newSegmentData;
+
+    this.segmentsService.publishNewSegment({
+      payload: {
+        node: newSegment,
+        variables: {
+          drawingID,
+          userID,
+        },
+      },
     });
 
     return newSegmentData;

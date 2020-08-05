@@ -2,7 +2,7 @@ import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import * as compression from 'compression';
-import { AppModule } from './app.module';
+import { AppModule } from './app/app.module';
 
 const logger = new Logger('App');
 
@@ -13,7 +13,7 @@ async function bootstrap() {
   app.use(compression());
   app.enableCors();
 
-  await app.listen(configService.get('port'));
+  await app.listen(configService.get('SERVER_PORT'));
 
   logger.log(`Application is running on: ${await app.getUrl()}`);
 }

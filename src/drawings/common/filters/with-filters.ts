@@ -9,7 +9,7 @@ export interface WithFiltersArgs extends FilterArgs {
 }
 
 export function withFilters(args: WithFiltersArgs): boolean {
-  const { filters, ...rest } = args;
+  const { filters, ...filterArgs } = args;
 
-  return filters.every((filter) => filter(rest));
+  return filters.every(filter => filter(filterArgs));
 }

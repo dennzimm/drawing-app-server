@@ -12,3 +12,12 @@ export function drawingFilter<
 
   return payload[key].drawingID === variables.drawingID;
 }
+
+export function drawingsFilter<
+  P extends Record<string, DrawingFilter>,
+  V extends DrawingFilter
+>(args: FilterArgs<P, V>): boolean {
+  const { payload, variables, key } = args;
+
+  return payload[key].drawingID === variables.drawingID;
+}
