@@ -18,7 +18,7 @@ export class DrawingsService {
 
   async findAll(): Promise<DrawingObjectType[]> {
     return from(this.drawingsRepository.find())
-      .pipe(map(drawing => drawing.map(this.drawingReducer)))
+      .pipe(map((drawing) => drawing.map(this.drawingReducer)))
       .toPromise();
   }
 
@@ -26,7 +26,7 @@ export class DrawingsService {
     const drawing = await this.drawingsRepository.findOne({ id });
 
     if (!drawing) {
-      throw new NotFoundException(name);
+      throw new NotFoundException(id);
     }
 
     return this.drawingReducer(drawing);
@@ -37,7 +37,7 @@ export class DrawingsService {
     const newDrawing = await this.drawingsRepository.create(drawingData);
 
     return from(this.drawingsRepository.save(newDrawing))
-      .pipe(map(drawing => this.drawingReducer(drawing)))
+      .pipe(map((drawing) => this.drawingReducer(drawing)))
       .toPromise();
   }
 
@@ -46,7 +46,7 @@ export class DrawingsService {
   //   const updatedDrawing = await this.drawingsRepository.findOne(id);
 
   //   if (!updatedDrawing) {
-  //     throw new NotFoundException(name);
+  //     throw new NotFoundException(id);
   //   }
 
   //   return updatedDrawing;
