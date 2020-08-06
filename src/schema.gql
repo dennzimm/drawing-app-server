@@ -21,8 +21,8 @@ type Segment {
   itemID: ID!
   segmentData: SegmentData!
   strokeColor: String
-  fillColor: [Float!]
-  strokeWidth: Int
+  fillColor: String
+  strokeWidth: Float
 }
 
 type ItemMutationPayload {
@@ -47,14 +47,14 @@ input NewSegmentInput {
   itemID: ID!
   segmentData: SegmentDataInput!
   strokeColor: String
-  fillColor: [Float!]
-  strokeWidth: Int
+  fillColor: String
+  strokeWidth: Float
 }
 
 type Query {
   drawings: [Drawing!]!
   drawing(userID: ID!, id: ID!): Drawing!
-  isAppOnline: Boolean!
+  isOnline: Boolean!
 }
 
 type Mutation {
