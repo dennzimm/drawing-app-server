@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class AppService {
-  isAppOnline(): boolean {
+  isOnline(): boolean {
     return true;
   }
 }

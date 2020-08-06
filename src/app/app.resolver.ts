@@ -5,8 +5,8 @@ import { AppService } from './app.service';
 export class AppResolver {
   constructor(private appService: AppService) {}
 
-  @Query(returns => Boolean)
-  isAppOnline(): boolean {
-    return this.appService.isAppOnline();
+  @Query((returns) => Boolean)
+  isOnline(): boolean {
+    return this.appService.isOnline();
   }
 }
