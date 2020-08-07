@@ -1,4 +1,4 @@
-import { Field, Float, ID, InputType, Int, ObjectType } from '@nestjs/graphql';
+import { Field, Float, ID, InputType, ObjectType } from '@nestjs/graphql';
 import { CommonDrawingInput } from '../common/dto/common-drawing.dto';
 
 @InputType('SegmentDataInput')
@@ -14,6 +14,12 @@ export class SegmentData {
 @InputType('NewSegmentInput')
 @ObjectType()
 export class Segment extends CommonDrawingInput {
+  @Field((type) => ID, { nullable: true })
+  layerID?: string;
+
+  @Field((type) => ID)
+  groupID: string;
+
   @Field((type) => ID)
   itemID: string;
 

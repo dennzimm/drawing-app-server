@@ -18,6 +18,8 @@ type SegmentData {
 }
 
 type Segment {
+  layerID: ID
+  groupID: ID!
   itemID: ID!
   segmentData: SegmentData!
   strokeColor: String
@@ -44,6 +46,8 @@ input SegmentDataInput {
 input NewSegmentInput {
   userID: ID!
   drawingID: ID!
+  layerID: ID
+  groupID: ID!
   itemID: ID!
   segmentData: SegmentDataInput!
   strokeColor: String
@@ -81,8 +85,8 @@ type Subscription {
   itemMutated(userID: ID!, drawingID: ID!): ItemMutationPayload!
 }
 
-union PublishedDrawingData = NewSegmentPayload
+union PublishedDrawingData = NewSegment
 
-type NewSegmentPayload {
+type NewSegment {
   node: Segment!
 }
