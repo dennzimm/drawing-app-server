@@ -1,6 +1,6 @@
 import { CommonSubscriptionInput } from '../common/dto/common-subscription.dto';
-import { MutationType } from '../enums/mutation.enum';
 import { ItemObjectType } from '../models/item.model';
+import { MutationType } from '../enums/mutation.enums';
 
 export interface CommonItemProps {
   drawingID: string;

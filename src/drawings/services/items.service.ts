@@ -6,7 +6,7 @@ import { map } from 'rxjs/operators';
 import { Repository } from 'typeorm';
 import Drawing from '../entities/drawing.entity';
 import Item from '../entities/item.entity';
-import { ItemSubscriptionType } from '../enums/item.enum';
+import { ItemSubscriptionType } from '../enums/item.enums';
 import {
   CreateItemProps,
   DeleteItemProps,
@@ -53,31 +53,9 @@ export class ItemsService {
     }
 
     return from(this.itemsRepository.remove(item))
-      .pipe(map(item => this.itemReducer(item)))
+      .pipe(map((item) => this.itemReducer(item)))
       .toPromise();
   }
-
-  // async create(args: AddItemInput): Promise<typeof ItemUnion> {
-  //   const { drawingID, itemID, itemData } = args;
-  //   const newItem = await new this.itemModel({ itemID, itemData }).save();
-  //   await this.drawingModel.findOneAndUpdate(
-  //     { drawingID },
-  //     { $push: { items: newItem._id } },
-  //     { new: true, useFindAndModify: false },
-  //   );
-  //   return this.itemReducer(newItem);
-  // }
-  // async deleteOne(args: DeleteItemArgs): Promise<typeof ItemUnion> {
-  //   const { drawingID, itemID } = args;
-  //   const foundItem = await this.itemModel.findOne({ itemID });
-  //   await foundItem.remove();
-  //   await this.drawingModel.findOneAndUpdate(
-  //     { drawingID },
-  //     { $pull: { items: foundItem._id } },
-  //     { new: true, useFindAndModify: false },
-  //   );
-  //   return this.itemReducer(foundItem);
-  // }
 
   publishItemMutation(props: PublishItemMutationProps) {
     const { mutation, payload } = props;

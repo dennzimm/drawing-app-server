@@ -2,7 +2,6 @@ import {
   BeforeInsert,
   Column,
   Entity,
-  JoinColumn,
   OneToMany,
   PrimaryGeneratedColumn,
   Unique,
@@ -18,14 +17,10 @@ class Drawing {
   @Column()
   public id: string;
 
-  @OneToMany(
-    () => Item,
-    item => item.drawing,
-    {
-      eager: true,
-      cascade: true,
-    },
-  )
+  @OneToMany(() => Item, (item) => item.drawing, {
+    eager: true,
+    cascade: true,
+  })
   public items: Item[];
 
   @BeforeInsert()

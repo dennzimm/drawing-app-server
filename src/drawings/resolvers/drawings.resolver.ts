@@ -9,30 +9,30 @@ import {
   GetDrawingArgs,
 } from '../dto/drawing/drawing.args';
 import { CreateDrawingInput } from '../dto/drawing/drawing.input';
-import { DrawingSubscriptionType } from '../enums/drawing.enum';
+import { DrawingSubscriptionType } from '../enums/drawing.enums';
 import { DrawingObjectType as Drawing } from '../models/drawing.model';
 import { DrawingsService } from '../services/drawings.service';
 import { PublishedDrawingDataUnion } from '../unions/drawing.union';
 
-@Resolver(of => Drawing)
+@Resolver((of) => Drawing)
 export class DrawingsResolver {
   constructor(
     @Inject('PUB_SUB') private pubSub: PubSubEngine,
     private drawingsService: DrawingsService,
   ) {}
 
-  @Query(returns => [Drawing])
+  @Query((returns) => [Drawing])
   async drawings(): Promise<Drawing[]> {
     return this.drawingsService.findAll();
   }
 
-  @Query(returns => Drawing)
+  @Query((returns) => Drawing)
   async drawing(@Args() getDrawingArgs: GetDrawingArgs): Promise<Drawing> {
     const { id } = getDrawingArgs;
     return this.drawingsService.findById(id);
   }
 
-  @Mutation(returns => Drawing)
+  @Mutation((returns) => Drawing)
   async createDrawing(
     @Args('createDrawingData') createDrawingData: CreateDrawingInput,
   ): Promise<Drawing> {
@@ -41,7 +41,7 @@ export class DrawingsResolver {
     });
   }
 
-  @Subscription(returns => PublishedDrawingDataUnion, {
+  @Subscription((returns) => PublishedDrawingDataUnion, {
     filter: (
       payload: Record<
         DrawingSubscriptionType.DRAWING_DATA_PUBLISHED,

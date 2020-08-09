@@ -7,19 +7,19 @@ import { withFilters } from '../common/filters/with-filters';
 import { DeleteItemArgs, ItemMutatedArgs } from '../dto/item/item.args';
 import { ItemMutationPayload } from '../dto/item/item.dto';
 import { CreateItemInput } from '../dto/item/item.input';
-import { ItemSubscriptionType } from '../enums/item.enum';
-import { MutationType } from '../enums/mutation.enum';
+import { ItemSubscriptionType } from '../enums/item.enums';
+import { MutationType } from '../enums/mutation.enums';
 import { ItemObjectType as Item } from '../models/item.model';
 import { ItemsService } from '../services/items.service';
 
-@Resolver(of => Item)
+@Resolver((of) => Item)
 export class ItemsResolver {
   constructor(
     @Inject('PUB_SUB') private pubSub: PubSubEngine,
     private itemsService: ItemsService,
   ) {}
 
-  @Mutation(returns => Item)
+  @Mutation((returns) => Item)
   async createItem(
     @Args('createItemData') createItemData: CreateItemInput,
   ): Promise<Item> {
@@ -43,7 +43,7 @@ export class ItemsResolver {
     return newItem;
   }
 
-  @Mutation(returns => Item)
+  @Mutation((returns) => Item)
   async deleteItem(@Args() deleteItemArgs: DeleteItemArgs): Promise<Item> {
     const { drawingID, userID, itemID } = deleteItemArgs;
     const deletedItem = await this.itemsService.deleteOne({
@@ -65,7 +65,7 @@ export class ItemsResolver {
     return deletedItem;
   }
 
-  @Subscription(returns => ItemMutationPayload, {
+  @Subscription((returns) => ItemMutationPayload, {
     filter: (
       payload: Record<ItemSubscriptionType.ITEM_MUTATED, ItemMutationPayload>,
       variables: ItemMutatedArgs,
