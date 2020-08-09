@@ -1,12 +1,12 @@
 import { createUnionType } from '@nestjs/graphql';
-import { NewSegmentPayload } from '../dto/segment/segment.dto';
+import { SegmentAddedPayload } from '../dto/path/path.dto';
 
 export const PublishedDrawingDataUnion = createUnionType({
   name: 'PublishedDrawingData',
-  types: () => [NewSegmentPayload],
-  resolveType(value: NewSegmentPayload) {
-    if (value.node.segmentData) {
-      return NewSegmentPayload;
+  types: () => [SegmentAddedPayload],
+  resolveType(value: SegmentAddedPayload) {
+    if (value.node.point) {
+      return SegmentAddedPayload;
     }
 
     return null;

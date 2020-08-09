@@ -1,37 +1,34 @@
-import { Field, Float, ID, InputType, ObjectType } from '@nestjs/graphql';
+import {
+  Field,
+  ID,
+  InputType,
+  IntersectionType,
+  ObjectType,
+} from '@nestjs/graphql';
 import { CommonDrawingInput } from '../common/dto/common-drawing.dto';
+import { PathObjectType as Path } from './path.model';
+import { PointObjectType as Point } from './point.model';
 
-@InputType('SegmentDataInput')
-@ObjectType()
-export class SegmentData {
-  @Field((type) => Float)
-  x: number;
-
-  @Field((type) => Float)
-  y: number;
-}
-
-@InputType('NewSegmentInput')
-@ObjectType()
-export class Segment extends CommonDrawingInput {
+@ObjectType('Segment')
+export class SegmentObjectType {
   @Field((type) => ID, { nullable: true })
   layerID?: string;
 
-  @Field((type) => ID)
-  groupID: string;
+  @Field((type) => ID, { nullable: true })
+  groupID?: string;
 
   @Field((type) => ID)
   itemID: string;
 
-  @Field((type) => SegmentData)
-  segmentData: SegmentData;
+  @Field((type) => Point)
+  point: Point;
 
-  @Field((type) => String, { nullable: true })
-  strokeColor?: string;
-
-  @Field((type) => String, { nullable: true })
-  fillColor?: string;
-
-  @Field((type) => Float, { nullable: true })
-  strokeWidth?: number;
+  @Field((type) => Path)
+  path: Path;
 }
+
+@InputType()
+export class SegmentInput extends IntersectionType(
+  CommonDrawingInput,
+  SegmentObjectType,
+) {}

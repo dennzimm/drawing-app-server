@@ -1,9 +1,9 @@
 import { DrawingsResolver } from './drawings.resolver';
 import { ItemsResolver } from './items.resolver';
-import { SegmentsResolver } from './segments.resolver';
+import { PathsResolver } from './paths.resolver';
 
 export const resolvers = [
   DrawingsResolver,
   ItemsResolver,
-  SegmentsResolver,
+  PathsResolver,
 ] as const;

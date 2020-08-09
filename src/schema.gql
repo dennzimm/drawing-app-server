@@ -12,22 +12,40 @@ type Drawing {
   items: [Item!]!
 }
 
-type SegmentData {
+type Path {
+  strokeWidth: Float!
+  strokeColor: String
+  fillColor: String
+  strokeJoin: StrokeJoinType
+  strokeCap: StrokeCapType
+}
+
+enum StrokeJoinType {
+  MITER
+  ROUND
+  BEVEL
+}
+
+enum StrokeCapType {
+  ROUND
+  SQUARE
+  BUTT
+}
+
+type Point {
   x: Float!
   y: Float!
 }
 
 type Segment {
   layerID: ID
-  groupID: ID!
+  groupID: ID
   itemID: ID!
-  segmentData: SegmentData!
-  strokeColor: String
-  fillColor: String
-  strokeWidth: Float
+  point: Point!
+  path: Path!
 }
 
-type ItemMutationPayload {
+type ItemMutation {
   mutation: MutationType!
   node: Item!
 }
@@ -38,21 +56,17 @@ enum MutationType {
   DELETED
 }
 
-input SegmentDataInput {
-  x: Float!
-  y: Float!
-}
-
-input NewSegmentInput {
-  userID: ID!
-  drawingID: ID!
-  layerID: ID
-  groupID: ID!
-  itemID: ID!
-  segmentData: SegmentDataInput!
+input PathInput {
+  strokeWidth: Float!
   strokeColor: String
   fillColor: String
-  strokeWidth: Float
+  strokeJoin: StrokeJoinType = MITER
+  strokeCap: StrokeCapType = BUTT
+}
+
+input PointInput {
+  x: Float!
+  y: Float!
 }
 
 type Query {
@@ -65,7 +79,7 @@ type Mutation {
   createDrawing(createDrawingData: CreateDrawingInput!): Drawing!
   createItem(createItemData: CreateItemInput!): Item!
   deleteItem(userID: ID!, drawingID: ID!, itemID: ID!): Item!
-  publishNewSegment(newSegmentData: NewSegmentInput!): Segment!
+  addSegment(segmentData: SegmentInput!): Segment!
 }
 
 input CreateDrawingInput {
@@ -80,13 +94,31 @@ input CreateItemInput {
   data: String!
 }
 
-type Subscription {
-  drawingDataPublished(userID: ID!, drawingID: ID!): PublishedDrawingData!
-  itemMutated(userID: ID!, drawingID: ID!): ItemMutationPayload!
+input SegmentInput {
+  userID: ID!
+  drawingID: ID!
+  layerID: ID
+  groupID: ID
+  itemID: ID!
+  point: PointInput!
+  path: PathInput!
 }
 
-union PublishedDrawingData = NewSegment
+type Subscription {
+  drawingDataPublished(userID: ID!, drawingID: ID!): PublishedDrawingData!
+  itemMutated(userID: ID!, drawingID: ID!): ItemMutation!
+}
 
-type NewSegment {
+union PublishedDrawingData = SegmentAdded
+
+type SegmentAdded {
+  mutation: PathMutationType!
   node: Segment!
+}
+
+enum PathMutationType {
+  CREATED
+  UPDATED
+  DELETED
+  SEGMENT_ADDED
 }
