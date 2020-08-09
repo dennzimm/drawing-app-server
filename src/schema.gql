@@ -16,20 +16,8 @@ type Path {
   strokeWidth: Float!
   strokeColor: String
   fillColor: String
-  strokeJoin: StrokeJoinType
-  strokeCap: StrokeCapType
-}
-
-enum StrokeJoinType {
-  MITER
-  ROUND
-  BEVEL
-}
-
-enum StrokeCapType {
-  ROUND
-  SQUARE
-  BUTT
+  strokeJoin: String
+  strokeCap: String
 }
 
 type Point {
@@ -60,8 +48,8 @@ input PathInput {
   strokeWidth: Float!
   strokeColor: String
   fillColor: String
-  strokeJoin: StrokeJoinType = MITER
-  strokeCap: StrokeCapType = BUTT
+  strokeJoin: String = "round"
+  strokeCap: String = "round"
 }
 
 input PointInput {

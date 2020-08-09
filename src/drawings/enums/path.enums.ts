@@ -17,16 +17,8 @@ export enum StrokeJoinType {
   BEVEL = 'bevel',
 }
 
-registerEnumType(StrokeJoinType, {
-  name: 'StrokeJoinType',
-});
-
 export enum StrokeCapType {
   ROUND = 'round',
   SQUARE = 'square',
   BUTT = 'butt',
 }
-
-registerEnumType(StrokeCapType, {
-  name: 'StrokeCapType',
-});

@@ -1,5 +1,4 @@
 import { Field, Float, InputType, ObjectType } from '@nestjs/graphql';
-import { StrokeCapType, StrokeJoinType } from '../enums/path.enums';
 
 @InputType('PathInput')
 @ObjectType('Path')
@@ -13,15 +12,15 @@ export class PathObjectType {
   @Field((type) => String, { nullable: true })
   fillColor?: string;
 
-  @Field((type) => StrokeJoinType, {
+  @Field((type) => String, {
     nullable: true,
-    defaultValue: StrokeJoinType.MITER,
+    defaultValue: 'round',
   })
-  strokeJoin?: StrokeJoinType;
+  strokeJoin?: string;
 
-  @Field((type) => StrokeCapType, {
+  @Field((type) => String, {
     nullable: true,
-    defaultValue: StrokeCapType.BUTT,
+    defaultValue: 'round',
   })
-  strokeCap?: StrokeCapType;
+  strokeCap?: string;
 }
