@@ -15,6 +15,7 @@ import { ConfigModule as NestConfigModule } from '@nestjs/config';
         POSTGRES_DB: Joi.string().required(),
         REDIS_HOST: Joi.string().required(),
         REDIS_PORT: Joi.number().required(),
+        JWT_SECRET: Joi.string().required(),
       }),
     }),
   ],
