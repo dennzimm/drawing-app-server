@@ -41,16 +41,13 @@ export class DrawingsService {
       .toPromise();
   }
 
-  // async update(id: number, drawing: any) {
-  //   await this.drawingsRepository.update(id, drawing);
-  //   const updatedDrawing = await this.drawingsRepository.findOne(id);
+  async createOrFind(props: CreateDrawingProps): Promise<DrawingObjectType> {
+    const {
+      drawingData: { id },
+    } = props;
 
-  //   if (!updatedDrawing) {
-  //     throw new NotFoundException(id);
-  //   }
-
-  //   return updatedDrawing;
-  // }
+    return this.create(props).catch((err) => this.findById(id));
+  }
 
   private drawingReducer(drawing: Drawing): DrawingObjectType {
     let items: ItemObjectType[] = [];

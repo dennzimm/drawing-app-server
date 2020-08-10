@@ -41,6 +41,15 @@ export class DrawingsResolver {
     });
   }
 
+  @Mutation((returns) => Drawing)
+  async createOrFindDrawing(
+    @Args('createDrawingData') createDrawingData: CreateDrawingInput,
+  ): Promise<Drawing> {
+    return this.drawingsService.createOrFind({
+      drawingData: createDrawingData,
+    });
+  }
+
   @Subscription((returns) => PublishedDrawingDataUnion, {
     filter: (
       payload: Record<
