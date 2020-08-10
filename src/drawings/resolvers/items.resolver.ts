@@ -6,7 +6,7 @@ import { userFilter } from '../common/filters/user.filter';
 import { withFilters } from '../common/filters/with-filters';
 import { DeleteItemArgs, ItemMutatedArgs } from '../dto/item/item.args';
 import { ItemMutationPayload } from '../dto/item/item.dto';
-import { CreateItemInput } from '../dto/item/item.input';
+import { CreateItemInput, UpdateItemInput } from '../dto/item/item.input';
 import { ItemSubscriptionType } from '../enums/item.enums';
 import { MutationType } from '../enums/mutation.enums';
 import { ItemObjectType as Item } from '../models/item.model';
@@ -41,6 +41,30 @@ export class ItemsResolver {
     });
 
     return newItem;
+  }
+
+  @Mutation((returns) => Item)
+  async updateItem(
+    @Args('updateItemData') updateItemData: UpdateItemInput,
+  ): Promise<Item> {
+    const { drawingID, userID, ...itemData } = updateItemData;
+    const updatedItem = await this.itemsService.update({
+      drawingID,
+      itemData,
+    });
+
+    this.itemsService.publishItemMutation({
+      mutation: MutationType.UPDATED,
+      payload: {
+        node: updatedItem,
+        variables: {
+          drawingID,
+          userID,
+        },
+      },
+    });
+
+    return updatedItem;
   }
 
   @Mutation((returns) => Item)

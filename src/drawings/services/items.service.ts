@@ -11,6 +11,7 @@ import {
   CreateItemProps,
   DeleteItemProps,
   PublishItemMutationProps,
+  UpdateItemProps,
 } from '../interfaces/item.types';
 import { ItemObjectType } from '../models/item.model';
 
@@ -39,6 +40,27 @@ export class ItemsService {
     await this.drawingsRepository.save(drawing);
 
     return newItem;
+  }
+
+  async update(props: UpdateItemProps): Promise<ItemObjectType> {
+    const {
+      drawingID,
+      itemData: { id, data },
+    } = props;
+
+    const item = await this.itemsRepository.findOne({
+      where: [{ id: id }, { drawing: { id: drawingID } }],
+    });
+
+    if (!item) {
+      throw new NotFoundException({ drawingID, itemID: id });
+    }
+
+    item.data = data;
+
+    return from(this.itemsRepository.save(item))
+      .pipe(map((item) => this.itemReducer(item)))
+      .toPromise();
   }
 
   async deleteOne(props: DeleteItemProps): Promise<ItemObjectType> {

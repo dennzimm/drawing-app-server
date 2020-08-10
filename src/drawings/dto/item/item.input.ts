@@ -3,9 +3,12 @@ import { CommonDrawingInput } from '../../common/dto/common-drawing.dto';
 
 @InputType()
 export class CreateItemInput extends CommonDrawingInput {
-  @Field(type => ID)
+  @Field((type) => ID)
   id: string;
 
-  @Field(type => String)
+  @Field((type) => String)
   data: string;
 }
+
+@InputType()
+export class UpdateItemInput extends CreateItemInput {}

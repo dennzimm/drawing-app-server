@@ -10,6 +10,10 @@ export interface CreateItemProps extends CommonItemProps {
   itemData: ItemObjectType;
 }
 
+export interface UpdateItemProps extends CommonItemProps {
+  itemData: ItemObjectType;
+}
+
 export interface DeleteItemProps extends CommonItemProps {
   itemID: string;
 }
