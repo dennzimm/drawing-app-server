@@ -26,7 +26,7 @@ type Point {
 }
 
 type Segment {
-  layerID: ID
+  layerID: ID!
   groupID: ID
   itemID: ID!
   point: Point!
@@ -65,7 +65,9 @@ type Query {
 
 type Mutation {
   createDrawing(createDrawingData: CreateDrawingInput!): Drawing!
+  createOrFindDrawing(createDrawingData: CreateDrawingInput!): Drawing!
   createItem(createItemData: CreateItemInput!): Item!
+  updateItem(updateItemData: UpdateItemInput!): Item!
   deleteItem(userID: ID!, drawingID: ID!, itemID: ID!): Item!
   addSegment(segmentData: SegmentInput!): Segment!
 }
@@ -82,10 +84,17 @@ input CreateItemInput {
   data: String!
 }
 
+input UpdateItemInput {
+  userID: ID!
+  drawingID: ID!
+  id: ID!
+  data: String!
+}
+
 input SegmentInput {
   userID: ID!
   drawingID: ID!
-  layerID: ID
+  layerID: ID!
   groupID: ID
   itemID: ID!
   point: PointInput!

@@ -11,8 +11,8 @@ import { PointObjectType as Point } from './point.model';
 
 @ObjectType('Segment')
 export class SegmentObjectType {
-  @Field((type) => ID, { nullable: true })
-  layerID?: string;
+  @Field((type) => ID)
+  layerID: string;
 
   @Field((type) => ID, { nullable: true })
   groupID?: string;
