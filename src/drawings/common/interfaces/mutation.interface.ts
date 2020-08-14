@@ -1,6 +1,6 @@
 import { MutationType } from '../../enums/mutation.enums';
 
-export interface MutationPayload<T, M = MutationType> {
+export interface MutationPayload<N, M = MutationType> {
   mutation: M;
-  node: T;
+  node: N;
 }
