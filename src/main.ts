@@ -13,7 +13,7 @@ async function bootstrap() {
   app.use(compression());
   app.enableCors();
 
-  await app.listen(configService.get('SERVER_PORT'));
+  await app.listen(configService.get('SERVER_PORT') || 80);
 
   logger.log(`Application is running on: ${await app.getUrl()}`);
 }
