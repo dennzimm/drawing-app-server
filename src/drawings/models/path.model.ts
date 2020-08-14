@@ -23,4 +23,10 @@ export class PathObjectType {
     defaultValue: 'round',
   })
   strokeCap?: string;
+
+  @Field((type) => String, {
+    nullable: true,
+    defaultValue: 'normal',
+  })
+  blendMode?: string;
 }

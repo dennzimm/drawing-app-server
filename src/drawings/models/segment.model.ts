@@ -1,34 +1,9 @@
-import {
-  Field,
-  ID,
-  InputType,
-  IntersectionType,
-  ObjectType,
-} from '@nestjs/graphql';
-import { CommonDrawingInput } from '../common/dto/common-drawing.dto';
-import { PathObjectType as Path } from './path.model';
+import { Field, ObjectType, InputType } from '@nestjs/graphql';
 import { PointObjectType as Point } from './point.model';
 
+@InputType('SegmentInput')
 @ObjectType('Segment')
 export class SegmentObjectType {
-  @Field((type) => ID)
-  layerID: string;
-
-  @Field((type) => ID, { nullable: true })
-  groupID?: string;
-
-  @Field((type) => ID)
-  itemID: string;
-
   @Field((type) => Point)
   point: Point;
-
-  @Field((type) => Path)
-  path: Path;
 }
-
-@InputType()
-export class SegmentInput extends IntersectionType(
-  CommonDrawingInput,
-  SegmentObjectType,
-) {}

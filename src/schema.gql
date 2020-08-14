@@ -2,22 +2,13 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Item {
-  id: ID!
-  data: String!
-}
-
-type Drawing {
-  id: ID!
-  items: [Item!]!
-}
-
 type Path {
   strokeWidth: Float!
   strokeColor: String
   fillColor: String
   strokeJoin: String
   strokeCap: String
+  blendMode: String
 }
 
 type Point {
@@ -26,11 +17,53 @@ type Point {
 }
 
 type Segment {
+  point: Point!
+}
+
+type PublishedDrawingData {
+  action: DrawingDataMutationType!
+  node: PublishedDrawingDataNode!
+}
+
+enum DrawingDataMutationType {
+  PENCIL_DRAWING
+  BRUSH_DRAWING
+  ERASE_DRAWING
+}
+
+union PublishedDrawingDataNode = PencilDrawing | BrushDrawing | EraseDrawing
+
+type PencilDrawing {
   layerID: ID!
   groupID: ID
   itemID: ID!
-  point: Point!
   path: Path!
+  segment: Segment!
+}
+
+type BrushDrawing {
+  layerID: ID!
+  groupID: ID
+  itemID: ID!
+  path: Path!
+  segments: [Segment!]!
+}
+
+type EraseDrawing {
+  layerID: ID!
+  itemID: ID!
+  path: Path!
+  segment: Segment!
+}
+
+type Item {
+  id: ID!
+  data: String!
+}
+
+type Drawing {
+  id: ID!
+  items: [Item!]!
 }
 
 type ItemMutation {
@@ -50,11 +83,16 @@ input PathInput {
   fillColor: String
   strokeJoin: String = "round"
   strokeCap: String = "round"
+  blendMode: String = "normal"
 }
 
 input PointInput {
   x: Float!
   y: Float!
+}
+
+input SegmentInput {
+  point: PointInput!
 }
 
 type Query {
@@ -64,12 +102,43 @@ type Query {
 }
 
 type Mutation {
+  publishPencilDrawing(pencilDrawingData: PencilDrawingInput!): Boolean!
+  publishBrushDrawing(brushDrawingData: BrushDrawingInput!): Boolean!
+  publishEraseDrawing(eraseDrawingData: EraseDrawingInput!): Boolean!
   createDrawing(createDrawingData: CreateDrawingInput!): Drawing!
   createOrFindDrawing(createDrawingData: CreateDrawingInput!): Drawing!
   createItem(createItemData: CreateItemInput!): Item!
   updateItem(updateItemData: UpdateItemInput!): Item!
   deleteItem(userID: ID!, drawingID: ID!, itemID: ID!): Item!
-  addSegment(segmentData: SegmentInput!): Segment!
+}
+
+input PencilDrawingInput {
+  userID: ID!
+  drawingID: ID!
+  layerID: ID!
+  groupID: ID
+  itemID: ID!
+  path: PathInput!
+  segment: SegmentInput!
+}
+
+input BrushDrawingInput {
+  userID: ID!
+  drawingID: ID!
+  layerID: ID!
+  groupID: ID
+  itemID: ID!
+  path: PathInput!
+  segments: SegmentInput!
+}
+
+input EraseDrawingInput {
+  userID: ID!
+  drawingID: ID!
+  layerID: ID!
+  itemID: ID!
+  path: PathInput!
+  segment: SegmentInput!
 }
 
 input CreateDrawingInput {
@@ -91,31 +160,7 @@ input UpdateItemInput {
   data: String!
 }
 
-input SegmentInput {
-  userID: ID!
-  drawingID: ID!
-  layerID: ID!
-  groupID: ID
-  itemID: ID!
-  point: PointInput!
-  path: PathInput!
-}
-
 type Subscription {
   drawingDataPublished(userID: ID!, drawingID: ID!): PublishedDrawingData!
   itemMutated(userID: ID!, drawingID: ID!): ItemMutation!
-}
-
-union PublishedDrawingData = SegmentAdded
-
-type SegmentAdded {
-  mutation: PathMutationType!
-  node: Segment!
-}
-
-enum PathMutationType {
-  CREATED
-  UPDATED
-  DELETED
-  SEGMENT_ADDED
 }

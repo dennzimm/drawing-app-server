@@ -1,14 +1,24 @@
 import { createUnionType } from '@nestjs/graphql';
-import { SegmentAddedPayload } from '../dto/path/path.dto';
+import {
+  PencilDrawingPayload,
+  BrushDrawingPayload,
+  EraseDrawingPayload,
+} from '../dto/drawing-data/drawing-data.dto';
+import { DrawingDataActionType } from '../enums/drawing-data.enums';
 
-export const PublishedDrawingDataUnion = createUnionType({
-  name: 'PublishedDrawingData',
-  types: () => [SegmentAddedPayload],
-  resolveType(value: SegmentAddedPayload) {
-    if (value.node.point) {
-      return SegmentAddedPayload;
+export const PublishedDrawingDataNode = createUnionType({
+  name: 'PublishedDrawingDataNode',
+  types: () => [PencilDrawingPayload, BrushDrawingPayload, EraseDrawingPayload],
+  resolveType(value) {
+    switch (value.action) {
+      case DrawingDataActionType.PENCIL_DRAWING:
+        return PencilDrawingPayload;
+      case DrawingDataActionType.BRUSH_DRAWING:
+        return BrushDrawingPayload;
+      case DrawingDataActionType.ERASE_DRAWING:
+        return EraseDrawingPayload;
+      default:
+        return null;
     }
-
-    return null;
   },
 });
