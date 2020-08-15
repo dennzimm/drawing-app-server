@@ -37,23 +37,23 @@ type PencilDrawing {
   layerID: ID!
   groupID: ID
   itemID: ID!
-  path: Path!
   segment: Segment!
+  path: Path!
 }
 
 type BrushDrawing {
   layerID: ID!
   groupID: ID
   itemID: ID!
-  path: Path!
   segments: [Segment!]!
+  path: Path!
 }
 
 type EraseDrawing {
   layerID: ID!
   itemID: ID!
-  path: Path!
   segment: Segment!
+  path: Path!
 }
 
 type Item {
@@ -118,8 +118,8 @@ input PencilDrawingInput {
   layerID: ID!
   groupID: ID
   itemID: ID!
-  path: PathInput!
   segment: SegmentInput!
+  path: PathInput!
 }
 
 input BrushDrawingInput {
@@ -128,8 +128,8 @@ input BrushDrawingInput {
   layerID: ID!
   groupID: ID
   itemID: ID!
+  segments: [SegmentInput!]!
   path: PathInput!
-  segments: SegmentInput!
 }
 
 input EraseDrawingInput {
@@ -137,8 +137,8 @@ input EraseDrawingInput {
   drawingID: ID!
   layerID: ID!
   itemID: ID!
-  path: PathInput!
   segment: SegmentInput!
+  path: PathInput!
 }
 
 input CreateDrawingInput {

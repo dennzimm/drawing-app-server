@@ -1,4 +1,4 @@
-import { Field, ObjectType, OmitType } from '@nestjs/graphql';
+import { Field, ObjectType, OmitType, InputType } from '@nestjs/graphql';
 import { CommonItemObjectType } from '../../common/dto/common-item.dto';
 import { ActionPayload } from '../../common/interfaces/action.interface';
 import { DrawingDataActionType } from '../../enums/drawing-data.enums';
@@ -19,29 +19,28 @@ export class PublishedDrawingDataPayload
 
 @ObjectType('PencilDrawing')
 export class PencilDrawingPayload extends CommonItemObjectType {
-  @Field((type) => Path)
-  path: Path;
-
   @Field((type) => Segment)
   segment: Segment;
-}
 
-@ObjectType('BrushDrawing')
-export class BrushDrawingPayload extends CommonItemObjectType {
   @Field((type) => Path)
   path: Path;
-
+}
+@ObjectType('BrushDrawing')
+export class BrushDrawingPayload extends CommonItemObjectType {
   @Field((type) => [Segment])
   segments: Segment[];
+
+  @Field((type) => Path)
+  path: Path;
 }
 
 @ObjectType('EraseDrawing')
 export class EraseDrawingPayload extends OmitType(CommonItemObjectType, [
   'groupID',
 ] as const) {
-  @Field((type) => Path) // TODO: Wrong type (PickType...)
-  path: Pick<Path, 'strokeWidth'>;
-
   @Field((type) => Segment)
   segment: Segment;
+
+  @Field((type) => Path)
+  path: Pick<Path, 'strokeWidth'>;
 }
