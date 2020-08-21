@@ -4,6 +4,10 @@ fragment DrawingModelData on Drawing {
   updatedAt
 }
 
+fragment DrawingData on Drawing {
+  name
+}
+
 fragment DrawingItems on Drawing {
   items {
     name
@@ -20,8 +24,9 @@ query Drawings {
 }
 
 query Drawing {
-  drawing(drawingName: "98jij0d923u0902d") {
+  drawing(drawingName: "i921ncby87238uf") {
     ...DrawingModelData
+    ...DrawingData
     ...DrawingItems
   }
 }

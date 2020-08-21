@@ -1,0 +1,38 @@
+fragment ItemData on Item {
+  name
+  type
+  data
+}
+
+mutation CreateItem {
+  createItem(
+    user: { userId: "anonymous_99023112" }
+    drawing: { drawingName: "i921ncby87238uf" }
+    data: {
+      name: "layer9901293-"
+      type: LAYER
+      data: "[Layer, { data: '0912u309u12093u0921-2ke' }]"
+    }
+  ) {
+    id
+  }
+}
+
+mutation DeleteItem {
+  deleteItem(
+    user: { userId: "anonymous_99023112" }
+    drawing: { drawingName: "i921ncby87238uf" }
+    data: { name: "layer9901293-" }
+  ) {
+    id
+  }
+}
+
+subscription ItemMutated {
+  itemMutated(userId: "anonymous_9902311211", drawingName: "i921ncby87238uf") {
+    mutation
+    node {
+      ...ItemData
+    }
+  }
+}

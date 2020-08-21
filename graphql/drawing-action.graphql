@@ -1,6 +1,5 @@
 fragment PencilDrawData on PencilDraw {
   layerID
-  groupID
   itemID
   segment {
     point {
@@ -45,8 +44,59 @@ fragment EraseData on Erase {
   }
 }
 
+mutation PencilDraw {
+  pencilDraw(
+    user: { userId: "anonymous_99023112" }
+    drawing: { drawingName: "i921ncby87238uf" }
+    data: {
+      layerID: "layer1"
+      itemID: "item00123"
+      segment: { point: { x: 44, y: 89 } }
+      path: {
+        strokeWidth: 2
+        strokeColor: "#feebc8"
+        strokeJoin: "round"
+        strokeCap: "round"
+      }
+    }
+  )
+}
+
+mutation BrushDraw {
+  brushDraw(
+    user: { userId: "anonymous_99023112" }
+    drawing: { drawingName: "i921ncby87238uf" }
+    data: {
+      layerID: "layer1"
+      itemID: "item00123"
+      segments: [
+        { point: { x: 44, y: 89 } }
+        { point: { x: 54, y: 99 } }
+        { point: { x: 84, y: 129 } }
+      ]
+      path: { strokeWidth: 8, strokeColor: "#feebc8" }
+    }
+  )
+}
+
+mutation Erase {
+  erase(
+    user: { userId: "anonymous_99023112" }
+    drawing: { drawingName: "i921ncby87238uf" }
+    data: {
+      layerID: "layer1"
+      itemID: "item00123"
+      segment: { point: { x: 44, y: 89 } }
+      path: { strokeWidth: 24 }
+    }
+  )
+}
+
 subscription DrawingActionPublished {
-  drawingActionPublished(userId: "1", drawingName: "1") {
+  drawingActionPublished(
+    userId: "anonymous_99023112"
+    drawingName: "i921ncby87238uf"
+  ) {
     action
     node {
       ...PencilDrawData
