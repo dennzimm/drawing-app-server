@@ -20,6 +20,8 @@ interface ConnectionParams extends Object {
         debug: configService.get('GRAPHQL_DEBUG') === '1' ? true : false,
         playground:
           configService.get('PLAYGROUND_ENABLE') === '1' ? true : false,
+        introspection:
+          configService.get('INTROSPECTION_ENABLE') === '1' ? true : false,
         // subscriptions: {
         //   onConnect: (connectionParams: ConnectionParams, websocket) => {
         //     const { userID, drawingID } = connectionParams;
