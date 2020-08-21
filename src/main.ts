@@ -1,7 +1,7 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app/app.module';
 import { ValidationPipe } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
 import * as compression from 'compression';
+import { AppModule } from './app/app.module';
 // import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 async function bootstrap() {
@@ -33,6 +33,6 @@ async function bootstrap() {
     app.enableCors();
   }
 
-  await app.listen(process.env.PORT || 5000);
+  await app.listen(process.env.PORT || 3000);
 }
 bootstrap();
