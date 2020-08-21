@@ -6,7 +6,7 @@ services:
       context: prisma
       dockerfile: Dockerfile
     environment:
-      POSTGRESQL_URL: ${POSTGRESQL_URL}
+      DATABASE_URL: ${DATABASE_URL}
     depends_on:
       - postgres
 
