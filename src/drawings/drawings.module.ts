@@ -1,39 +1,21 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-// import { ConfigService } from '@nestjs/config';
-import { PubSub } from 'apollo-server-express';
-// import { RedisPubSub } from 'graphql-redis-subscriptions';
-// import * as Redis from 'ioredis';
-import Drawing from './entities/drawing.entity';
-import Item from './entities/item.entity';
-import { resolvers } from './resolvers';
-import { services } from './services';
+import { DateScalar } from '../common/scalars/date.scalar';
+import { DrawingActionResolver } from './resolvers/drawing-action.resolver';
+import { DrawingResolver } from './resolvers/drawing.resolver';
+import { ItemResolver } from './resolvers/item.resolver';
+import { DrawingActionService } from './services/drawing-action.service';
+import { DrawingService } from './services/drawing.service';
+import { ItemService } from './services/item.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Drawing, Item])],
-  controllers: [],
   providers: [
-    // {
-    //   inject: [ConfigService],
-    //   provide: 'PUB_SUB',
-    //   useFactory: (configService: ConfigService) => {
-    //     const options = {
-    //       host: configService.get('REDIS_HOST'),
-    //       port: configService.get('REDIS_PORT'),
-    //     };
-
-    //     return new RedisPubSub({
-    //       publisher: new Redis(options),
-    //       subscriber: new Redis(options),
-    //     });
-    //   },
-    // },
-    {
-      provide: 'PUB_SUB',
-      useValue: new PubSub(),
-    },
-    ...services,
-    ...resolvers,
+    DrawingService,
+    DrawingActionService,
+    ItemService,
+    DrawingResolver,
+    DrawingActionResolver,
+    ItemResolver,
+    DateScalar,
   ],
 })
 export class DrawingsModule {}

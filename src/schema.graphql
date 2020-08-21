@@ -1,0 +1,180 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Path {
+  strokeWidth: Float!
+  strokeColor: String
+  fillColor: String
+  strokeJoin: String
+  strokeCap: String
+  blendMode: String
+}
+
+type Point {
+  x: Float!
+  y: Float!
+}
+
+type Segment {
+  point: Point!
+}
+
+type DrawingAction {
+  action: ActionType!
+  node: PublishedDrawingDataNode!
+}
+
+enum ActionType {
+  PENCIL_DRAW
+  BRUSH_DRAW
+  ERASE
+}
+
+union PublishedDrawingDataNode = PencilDraw | BrushDraw | Erase
+
+type PencilDraw {
+  layerID: String!
+  groupID: String
+  itemID: String!
+  segment: Segment!
+  path: Path!
+}
+
+type BrushDraw {
+  layerID: String!
+  groupID: String
+  itemID: String!
+  segments: [Segment!]!
+  path: Path!
+}
+
+type Erase {
+  layerID: String!
+  groupID: String
+  itemID: String!
+  segment: Segment!
+  path: Path!
+}
+
+type Item {
+  id: ID!
+  createdAt: Date!
+  updatedAt: Date!
+  name: String!
+  type: ItemType!
+  data: String!
+}
+
+"""Date custom scalar type"""
+scalar Date
+
+"""Paper Item Type (root level)"""
+enum ItemType {
+  LAYER
+  GROUP
+  PATH
+}
+
+type Drawing {
+  id: ID!
+  createdAt: Date!
+  updatedAt: Date!
+  items: [Item!]!
+  name: String!
+}
+
+type ItemMutation {
+  mutation: MutationType!
+  node: Item!
+}
+
+enum MutationType {
+  CREATED
+  UPDATED
+  DELETED
+}
+
+input PathInput {
+  strokeWidth: Float!
+  strokeColor: String
+  fillColor: String
+  strokeJoin: String
+  strokeCap: String
+  blendMode: String
+}
+
+input PointInput {
+  x: Float!
+  y: Float!
+}
+
+input SegmentInput {
+  point: PointInput!
+}
+
+type Query {
+  drawings: [Drawing!]!
+  drawing(drawingName: String!): Drawing!
+  isOnline: Boolean!
+}
+
+type Mutation {
+  pencilDraw(drawing: DrawingNameInput!, user: UserIdInput!, data: PencilDrawInput!): Boolean!
+  brushDraw(drawing: DrawingNameInput!, user: UserIdInput!, data: BrushDrawInput!): Boolean!
+  erase(drawing: DrawingNameInput!, user: UserIdInput!, data: EraseInput!): Boolean!
+  createDrawing(data: CreateDrawingInput!): Drawing!
+  createItem(drawing: DrawingNameInput!, user: UserIdInput!, data: CreateItemInput!): Item!
+  deleteItem(drawing: DrawingNameInput!, user: UserIdInput!, data: DeleteItemInput!): Item!
+}
+
+input DrawingNameInput {
+  drawingName: String!
+}
+
+input UserIdInput {
+  userId: String!
+}
+
+input PencilDrawInput {
+  layerID: String!
+  groupID: String
+  itemID: String!
+  segment: SegmentInput!
+  path: PathInput!
+}
+
+input BrushDrawInput {
+  layerID: String!
+  groupID: String
+  itemID: String!
+  segments: [SegmentInput!]!
+  path: PathInput!
+}
+
+input EraseInput {
+  layerID: String!
+  groupID: String
+  itemID: String!
+  segment: SegmentInput!
+  path: PathInput!
+}
+
+input CreateDrawingInput {
+  name: String!
+}
+
+input CreateItemInput {
+  name: String!
+  type: ItemType!
+  data: String!
+}
+
+input DeleteItemInput {
+  name: String!
+}
+
+type Subscription {
+  drawingActionPublished(userId: String!, drawingName: String!): DrawingAction!
+  itemMutated(userId: String!, drawingName: String!): ItemMutation!
+}

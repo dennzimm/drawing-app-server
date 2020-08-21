@@ -1,0 +1,53 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = "***"
+}
+
+model Drawing {
+  id            String   @default(cuid()) @id
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  authorId      String?
+  author        User?  @relation(fields: [authorId], references: [id])
+  name          String   @unique
+  items         Item[]
+}
+
+model Item {
+  id            String   @default(cuid()) @id
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  drawingName   String
+  drawing       Drawing  @relation(fields: [drawingName], references: [id])
+  authorId      String?
+  author        User?    @relation(fields: [authorId], references: [id])
+  name          String   @unique
+  type          ItemType
+  data          String
+}
+
+model User {
+  id            String    @default(cuid()) @id
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  email         String    @unique
+  password      String
+  firstname     String?
+  lastname      String?
+  role          Role
+  drawings      Drawing[]
+}
+
+enum ItemType {
+  GROUP
+  LAYER
+  PATH
+}
+
+enum Role {
+  USER
+}

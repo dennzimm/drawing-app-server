@@ -1,0 +1,603 @@
+{
+  "version": "0.3.14-fixed",
+  "steps": [
+    {
+      "tag": "CreateEnum",
+      "enum": "ItemType",
+      "values": [
+        "GROUP",
+        "LAYER",
+        "PATH"
+      ]
+    },
+    {
+      "tag": "CreateEnum",
+      "enum": "Role",
+      "values": [
+        "USER"
+      ]
+    },
+    {
+      "tag": "CreateSource",
+      "source": "db"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Source",
+        "source": "db"
+      },
+      "argument": "provider",
+      "value": "\"postgresql\""
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Source",
+        "source": "db"
+      },
+      "argument": "url",
+      "value": "\"***\""
+    },
+    {
+      "tag": "CreateModel",
+      "model": "Drawing"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Drawing",
+      "field": "id",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Drawing",
+          "field": "id"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Drawing",
+          "field": "id"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "cuid()"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Drawing",
+          "field": "id"
+        },
+        "directive": "id"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "Drawing",
+      "field": "createdAt",
+      "type": "DateTime",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Drawing",
+          "field": "createdAt"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Drawing",
+          "field": "createdAt"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "now()"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Drawing",
+      "field": "updatedAt",
+      "type": "DateTime",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Drawing",
+          "field": "updatedAt"
+        },
+        "directive": "updatedAt"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "Drawing",
+      "field": "authorId",
+      "type": "String",
+      "arity": "Optional"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Drawing",
+      "field": "author",
+      "type": "User",
+      "arity": "Optional"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Drawing",
+          "field": "author"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Drawing",
+          "field": "author"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[authorId]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Drawing",
+          "field": "author"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Drawing",
+      "field": "name",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Drawing",
+          "field": "name"
+        },
+        "directive": "unique"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "Drawing",
+      "field": "items",
+      "type": "Item",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateModel",
+      "model": "Item"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Item",
+      "field": "id",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Item",
+          "field": "id"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Item",
+          "field": "id"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "cuid()"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Item",
+          "field": "id"
+        },
+        "directive": "id"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "Item",
+      "field": "createdAt",
+      "type": "DateTime",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Item",
+          "field": "createdAt"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Item",
+          "field": "createdAt"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "now()"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Item",
+      "field": "updatedAt",
+      "type": "DateTime",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Item",
+          "field": "updatedAt"
+        },
+        "directive": "updatedAt"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "Item",
+      "field": "drawingName",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Item",
+      "field": "drawing",
+      "type": "Drawing",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Item",
+          "field": "drawing"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Item",
+          "field": "drawing"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[drawingName]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Item",
+          "field": "drawing"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Item",
+      "field": "authorId",
+      "type": "String",
+      "arity": "Optional"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Item",
+      "field": "author",
+      "type": "User",
+      "arity": "Optional"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Item",
+          "field": "author"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Item",
+          "field": "author"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[authorId]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Item",
+          "field": "author"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Item",
+      "field": "name",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Item",
+          "field": "name"
+        },
+        "directive": "unique"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "Item",
+      "field": "type",
+      "type": "ItemType",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Item",
+      "field": "data",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateModel",
+      "model": "User"
+    },
+    {
+      "tag": "CreateField",
+      "model": "User",
+      "field": "id",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "User",
+          "field": "id"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "User",
+          "field": "id"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "cuid()"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "User",
+          "field": "id"
+        },
+        "directive": "id"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "User",
+      "field": "createdAt",
+      "type": "DateTime",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "User",
+          "field": "createdAt"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "User",
+          "field": "createdAt"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "now()"
+    },
+    {
+      "tag": "CreateField",
+      "model": "User",
+      "field": "updatedAt",
+      "type": "DateTime",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "User",
+          "field": "updatedAt"
+        },
+        "directive": "updatedAt"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "User",
+      "field": "email",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "User",
+          "field": "email"
+        },
+        "directive": "unique"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "User",
+      "field": "password",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "User",
+      "field": "firstname",
+      "type": "String",
+      "arity": "Optional"
+    },
+    {
+      "tag": "CreateField",
+      "model": "User",
+      "field": "lastname",
+      "type": "String",
+      "arity": "Optional"
+    },
+    {
+      "tag": "CreateField",
+      "model": "User",
+      "field": "role",
+      "type": "Role",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "User",
+      "field": "drawings",
+      "type": "Drawing",
+      "arity": "List"
+    }
+  ]
+}

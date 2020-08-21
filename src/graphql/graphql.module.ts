@@ -1,43 +1,46 @@
-import { ForbiddenException, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
-import { join } from 'path';
 
 interface ConnectionParams extends Object {
   userID: string;
   drawingID: string;
 }
 
-const clients = new Map<any, ConnectionParams>();
+// const clients = new Map<any, ConnectionParams>();
 
 @Module({
   imports: [
-    GraphQLModule.forRoot({
-      context: ({ req }) => ({ req }),
-      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
-      installSubscriptionHandlers: true,
-      subscriptions: {
-        onConnect: (connectionParams: ConnectionParams, websocket, context) => {
-          const { userID, drawingID } = connectionParams;
+    GraphQLModule.forRootAsync({
+      useFactory: async (configService: ConfigService) => ({
+        context: ({ req }) => ({ req }),
+        installSubscriptionHandlers: true,
+        autoSchemaFile:
+          configService.get('GRAPHQL_SCHEMA_DEST') || './src/schema.graphql',
+        debug: configService.get('GRAPHQL_DEBUG') === '1' ? true : false,
+        playground:
+          configService.get('PLAYGROUND_ENABLE') === '1' ? true : false,
+        // subscriptions: {
+        //   onConnect: (connectionParams: ConnectionParams, websocket) => {
+        //     const { userID, drawingID } = connectionParams;
 
-          if (!userID || !drawingID) {
-            throw new ForbiddenException(
-              'userID and drawingID must be supplied as connectionParams',
-            );
-          }
+        //     if (!userID || !drawingID) {
+        //       throw new ForbiddenException(
+        //         'userID and drawingID must be supplied as connectionParams',
+        //       );
+        //     }
 
-          clients.set(websocket, {
-            userID,
-            drawingID,
-          });
-
-          console.log(`user ${userID} connected to drawing ${drawingID}`);
-        },
-        onDisconnect: (websocket, context) => {
-          const { userID, drawingID } = clients.get(websocket);
-          console.log(`user ${userID} disconnected from drawing ${drawingID}`);
-          clients.delete(websocket);
-        },
-      },
+        //     clients.set(websocket, {
+        //       userID,
+        //       drawingID,
+        //     });
+        //   },
+        //   onDisconnect: websocket => {
+        //     clients.delete(websocket);
+        //   },
+        // },
+      }),
+      inject: [ConfigService],
     }),
   ],
 })

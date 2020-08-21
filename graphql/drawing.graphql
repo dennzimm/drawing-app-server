@@ -1,0 +1,27 @@
+fragment DrawingModelData on Drawing {
+  id
+  createdAt
+  updatedAt
+}
+
+fragment DrawingItems on Drawing {
+  items {
+    name
+    type
+    data
+  }
+}
+
+query Drawings {
+  drawings {
+    ...DrawingModelData
+    ...DrawingItems
+  }
+}
+
+query Drawing {
+  drawing(drawingName: "98jij0d923u0902d") {
+    ...DrawingModelData
+    ...DrawingItems
+  }
+}

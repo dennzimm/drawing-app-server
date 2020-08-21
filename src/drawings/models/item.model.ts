@@ -1,10 +1,22 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { ObjectType, registerEnumType } from '@nestjs/graphql';
+import { Model } from './abstract/model.model';
 
-@ObjectType('Item')
-export class ItemObjectType {
-  @Field(type => ID)
-  id: string;
+export enum ItemType {
+  LAYER = 'LAYER',
+  GROUP = 'GROUP',
+  PATH = 'PATH',
+}
 
-  @Field(type => String)
+registerEnumType(ItemType, {
+  name: 'ItemType',
+  description: 'Paper Item Type (root level)',
+});
+
+@ObjectType()
+export class Item extends Model {
+  name: string;
+
+  type: ItemType;
+
   data: string;
 }

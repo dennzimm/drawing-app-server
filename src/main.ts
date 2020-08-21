@@ -1,20 +1,38 @@
-import { Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
-import * as compression from 'compression';
 import { AppModule } from './app/app.module';
-
-const logger = new Logger('App');
+import { ValidationPipe } from '@nestjs/common';
+import * as compression from 'compression';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  const configService = app.get(ConfigService);
 
-  app.use(compression());
-  app.enableCors();
+  app.useGlobalPipes(new ValidationPipe());
 
-  await app.listen(configService.get('SERVER_PORT') || 80);
+  // Compression
+  if (process.env.COMPRESSION_ENABLE === '1') {
+    app.use(compression());
+  }
 
-  logger.log(`Application is running on: ${await app.getUrl()}`);
+  // Swagger Api
+  if (process.env.SWAGGER_ENABLE === '1') {
+    const options = new DocumentBuilder()
+      .setTitle(process.env.SWAGGER_TITLE || 'Nestjs')
+      .setDescription(
+        process.env.SWAGGER_DESCRIPTION || 'The nestjs API description',
+      )
+      .setVersion(process.env.SWAGGER_VERSION || '1.0')
+      .build();
+    const document = SwaggerModule.createDocument(app, options);
+
+    SwaggerModule.setup(process.env.SWAGGER_PATH || 'api', app, document);
+  }
+
+  // Cors
+  if (process.env.CORS_ENABLE === '1') {
+    app.enableCors();
+  }
+
+  await app.listen(process.env.PORT || 3000);
 }
 bootstrap();

@@ -1,6 +1,4 @@
-# env
-*.env*
-!*.env.sample
+
 
 # compiled output
 /dist
@@ -36,3 +34,10 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+# Prisma
+prisma/*.db
+prisma/migrations/dev/
+
+*.env*
+!*.env.sample

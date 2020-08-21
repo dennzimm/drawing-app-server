@@ -1,0 +1,57 @@
+fragment PencilDrawData on PencilDraw {
+  layerID
+  groupID
+  itemID
+  segment {
+    point {
+      x
+      y
+    }
+  }
+  path {
+    strokeWidth
+    strokeColor
+    strokeJoin
+    strokeCap
+  }
+}
+
+fragment BrushDrawData on BrushDraw {
+  layerID
+  itemID
+  segments {
+    point {
+      x
+      y
+    }
+  }
+  path {
+    strokeWidth
+    strokeColor
+  }
+}
+
+fragment EraseData on Erase {
+  layerID
+  itemID
+  segment {
+    point {
+      x
+      y
+    }
+  }
+  path {
+    strokeWidth
+  }
+}
+
+subscription DrawingActionPublished {
+  drawingActionPublished(userId: "1", drawingName: "1") {
+    action
+    node {
+      ...PencilDrawData
+      ...BrushDrawData
+      ...EraseData
+    }
+  }
+}
