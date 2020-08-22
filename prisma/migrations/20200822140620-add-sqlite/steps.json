@@ -1,0 +1,34 @@
+{
+  "version": "0.3.14-fixed",
+  "steps": [
+    {
+      "tag": "DeleteEnum",
+      "enum": "ItemType"
+    },
+    {
+      "tag": "DeleteEnum",
+      "enum": "Role"
+    },
+    {
+      "tag": "UpdateArgument",
+      "location": {
+        "tag": "Source",
+        "source": "db"
+      },
+      "argument": "provider",
+      "newValue": "\"sqlite\""
+    },
+    {
+      "tag": "UpdateField",
+      "model": "Item",
+      "field": "type",
+      "type": "String"
+    },
+    {
+      "tag": "UpdateField",
+      "model": "User",
+      "field": "role",
+      "type": "String"
+    }
+  ]
+}
