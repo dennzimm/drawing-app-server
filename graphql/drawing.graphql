@@ -19,6 +19,7 @@ fragment DrawingItems on Drawing {
 query Drawings {
   drawings {
     ...DrawingModelData
+    ...DrawingData
     ...DrawingItems
   }
 }
@@ -28,5 +29,11 @@ query Drawing {
     ...DrawingModelData
     ...DrawingData
     ...DrawingItems
+  }
+}
+
+mutation CreateDrawing {
+  createDrawing(data: { name: "jji29u9i2-3d0" }) {
+    id
   }
 }
