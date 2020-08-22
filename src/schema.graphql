@@ -4,6 +4,7 @@
 
 type Path {
   strokeWidth: Float!
+  closed: Boolean
   strokeColor: String
   fillColor: String
   strokeJoin: String
@@ -14,15 +15,15 @@ type Path {
 type Point {
   x: Float!
   y: Float!
-}
-
-type Segment {
-  point: Point!
+  angle: Float
+  angleInRadians: Float
+  length: Float
+  quadrant: Float
 }
 
 type DrawingAction {
   action: ActionType!
-  node: PublishedDrawingDataNode!
+  node: DrawingActionDataNode!
 }
 
 enum ActionType {
@@ -31,30 +32,32 @@ enum ActionType {
   ERASE
 }
 
-union PublishedDrawingDataNode = PencilDraw | BrushDraw | Erase
+union DrawingActionDataNode = PencilDraw | BrushDraw | Erase
 
 type PencilDraw {
   layerID: String!
   groupID: String
   itemID: String!
-  segment: Segment!
   path: Path!
+  point: Point!
 }
 
 type BrushDraw {
   layerID: String!
   groupID: String
   itemID: String!
-  segments: [Segment!]!
   path: Path!
+  delta: Point
+  middlePoint: Point
+  singlePoint: Point
 }
 
 type Erase {
   layerID: String!
   groupID: String
   itemID: String!
-  segment: Segment!
   path: Path!
+  point: Point!
 }
 
 type Item {
@@ -97,6 +100,7 @@ enum MutationType {
 
 input PathInput {
   strokeWidth: Float!
+  closed: Boolean = false
   strokeColor: String
   fillColor: String
   strokeJoin: String
@@ -107,10 +111,10 @@ input PathInput {
 input PointInput {
   x: Float!
   y: Float!
-}
-
-input SegmentInput {
-  point: PointInput!
+  angle: Float
+  angleInRadians: Float
+  length: Float
+  quadrant: Float
 }
 
 type Query {
@@ -140,24 +144,26 @@ input PencilDrawInput {
   layerID: String!
   groupID: String
   itemID: String!
-  segment: SegmentInput!
   path: PathInput!
+  point: PointInput!
 }
 
 input BrushDrawInput {
   layerID: String!
   groupID: String
   itemID: String!
-  segments: [SegmentInput!]!
   path: PathInput!
+  delta: PointInput
+  middlePoint: PointInput
+  singlePoint: PointInput
 }
 
 input EraseInput {
   layerID: String!
   groupID: String
   itemID: String!
-  segment: SegmentInput!
   path: PathInput!
+  point: PointInput!
 }
 
 input CreateDrawingInput {

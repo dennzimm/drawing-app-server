@@ -7,7 +7,7 @@ import {
 } from '../dto/drawing-action.dto';
 
 export const DrawingActionDataNode = createUnionType({
-  name: 'PublishedDrawingDataNode',
+  name: 'DrawingActionDataNode',
   types: () => [
     PencilDrawActionPayload,
     BrushDrawActionPayload,

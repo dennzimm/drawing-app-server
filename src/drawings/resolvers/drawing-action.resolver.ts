@@ -103,6 +103,10 @@ export class DrawingActionResolver {
       { drawingActionPublished }: PublishDrawingActionPayload,
       { userId, drawingName }: DrawingActionArgs,
     ) => {
+      if (!userId || !drawingName) {
+        return true;
+      }
+
       const isUser = drawingActionPublished.variables.userId === userId;
       const isDrawing =
         drawingActionPublished.variables.drawingName === drawingName;
