@@ -83,7 +83,7 @@ type Drawing {
   id: ID!
   createdAt: Date!
   updatedAt: Date!
-  items: [Item!]!
+  items: [Item]!
   name: String!
 }
 
@@ -119,7 +119,7 @@ input PointInput {
 
 type Query {
   drawings: [Drawing!]!
-  drawing(drawingName: String!): Drawing!
+  drawing(drawingName: String!): Drawing
   isOnline: Boolean!
 }
 
