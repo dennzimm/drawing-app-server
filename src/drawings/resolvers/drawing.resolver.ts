@@ -13,7 +13,7 @@ export class DrawingResolver {
     return this.drawingService.drawings();
   }
 
-  @Query(returns => Drawing)
+  @Query(returns => Drawing, { nullable: true })
   async drawing(@Args() name: DrawingNameArgs) {
     return this.drawingService.drawing({
       name: name.drawingName,
