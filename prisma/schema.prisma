@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -26,7 +26,7 @@ model Item {
   authorId      String?
   author        User?    @relation(fields: [authorId], references: [id])
   name          String   @unique
-  type          String
+  type          ItemType
   data          String
 }
 
@@ -38,6 +38,16 @@ model User {
   password      String
   firstname     String?
   lastname      String?
-  role          String
+  role          Role
   drawings      Drawing[]
+}
+
+enum ItemType {
+  GROUP
+  LAYER
+  PATH
+}
+
+enum Role {
+  USER
 }
