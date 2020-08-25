@@ -128,8 +128,8 @@ type Mutation {
   brushDraw(drawing: DrawingNameInput!, user: UserIdInput!, data: BrushDrawInput!): Boolean!
   erase(drawing: DrawingNameInput!, user: UserIdInput!, data: EraseInput!): Boolean!
   createDrawing(data: CreateDrawingInput!): Drawing!
-  createItem(drawing: DrawingNameInput!, user: UserIdInput!, data: CreateItemInput!): Item!
-  deleteItem(drawing: DrawingNameInput!, user: UserIdInput!, data: DeleteItemInput!): Item!
+  createItem(drawing: DrawingNameInput!, user: UserIdInput!, data: CreateItemInput!): Item
+  deleteItem(drawing: DrawingNameInput!, user: UserIdInput!, data: DeleteItemInput!): Item
 }
 
 input DrawingNameInput {

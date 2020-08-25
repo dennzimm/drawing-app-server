@@ -23,60 +23,68 @@ export class ItemResolver {
     private itemService: ItemService,
   ) {}
 
-  @Mutation(returns => Item)
+  @Mutation(returns => Item, { nullable: true })
   async createItem(
     @Args('data') { name, type, data }: CreateItemInput,
     @Args('user') { userId }: UserIdInput,
     @Args('drawing') { drawingName }: DrawingNameInput,
   ) {
-    const item = await this.itemService.createItem({
-      drawing: {
-        connect: {
-          name: drawingName,
+    try {
+      const item = await this.itemService.createItem({
+        drawing: {
+          connect: {
+            name: drawingName,
+          },
         },
-      },
-      name,
-      type,
-      data,
-    });
+        name,
+        type,
+        data,
+      });
 
-    this.itemService.publishItemMutation({
-      mutation: MutationType.CREATED,
-      payload: {
-        node: item,
-        variables: {
-          userId,
-          drawingName,
+      this.itemService.publishItemMutation({
+        mutation: MutationType.CREATED,
+        payload: {
+          node: item,
+          variables: {
+            userId,
+            drawingName,
+          },
         },
-      },
-    });
+      });
 
-    return item;
+      return item;
+    } catch (err) {
+      return null;
+    }
   }
 
-  @Mutation(returns => Item)
+  @Mutation(returns => Item, { nullable: true })
   async deleteItem(
     @Args('data')
     { name }: DeleteItemInput,
     @Args('user') { userId }: UserIdInput,
     @Args('drawing') { drawingName }: DrawingNameInput,
   ) {
-    const deletedItem = await this.itemService.deleteItem({
-      name,
-    });
+    try {
+      const deletedItem = await this.itemService.deleteItem({
+        name,
+      });
 
-    this.itemService.publishItemMutation({
-      mutation: MutationType.DELETED,
-      payload: {
-        node: deletedItem,
-        variables: {
-          userId,
-          drawingName,
+      this.itemService.publishItemMutation({
+        mutation: MutationType.DELETED,
+        payload: {
+          node: deletedItem,
+          variables: {
+            userId,
+            drawingName,
+          },
         },
-      },
-    });
+      });
 
-    return deletedItem;
+      return deletedItem;
+    } catch (err) {
+      return null;
+    }
   }
 
   @Subscription(returns => ItemMutation, {
