@@ -4,23 +4,23 @@ import { CreateDrawingInput } from '../dto/inputs/create-drawing.input';
 import { Drawing } from '../models/drawing.model';
 import { DrawingService } from '../services/drawing.service';
 
-@Resolver(of => Drawing)
+@Resolver((of) => Drawing)
 export class DrawingResolver {
   constructor(private drawingService: DrawingService) {}
 
-  @Query(returns => [Drawing])
+  @Query((returns) => [Drawing])
   async drawings() {
     return this.drawingService.drawings();
   }
 
-  @Query(returns => Drawing, { nullable: true })
+  @Query((returns) => Drawing, { nullable: true })
   async drawing(@Args() name: DrawingNameArgs) {
     return this.drawingService.drawing({
       name: name.drawingName,
     });
   }
 
-  @Mutation(returns => Drawing)
+  @Mutation((returns) => Drawing)
   async createDrawing(@Args('data') createDrawing: CreateDrawingInput) {
     return this.drawingService.createDrawing({ name: createDrawing.name });
   }

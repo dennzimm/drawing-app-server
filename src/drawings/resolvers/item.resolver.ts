@@ -16,14 +16,14 @@ import {
   PublishItemMutationPayload,
 } from '../services/item.service';
 
-@Resolver(of => Item)
+@Resolver((of) => Item)
 export class ItemResolver {
   constructor(
     @Inject('PUB_SUB') private pubSub: PubSubEngine,
     private itemService: ItemService,
   ) {}
 
-  @Mutation(returns => Item, { nullable: true })
+  @Mutation((returns) => Item, { nullable: true })
   async createItem(
     @Args('data') { name, type, data }: CreateItemInput,
     @Args('user') { userId }: UserIdInput,
@@ -58,7 +58,7 @@ export class ItemResolver {
     }
   }
 
-  @Mutation(returns => Item, { nullable: true })
+  @Mutation((returns) => Item, { nullable: true })
   async deleteItem(
     @Args('data')
     { name }: DeleteItemInput,
@@ -87,7 +87,7 @@ export class ItemResolver {
     }
   }
 
-  @Subscription(returns => ItemMutation, {
+  @Subscription((returns) => ItemMutation, {
     filter: (
       { itemMutated }: PublishItemMutationPayload,
       { userId, drawingName }: ItemMutatedArgs,

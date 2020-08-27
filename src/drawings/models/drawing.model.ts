@@ -6,6 +6,6 @@ import { Model } from './abstract/model.model';
 export class Drawing extends Model {
   name: string;
 
-  @Field(type => [Item], { nullable: 'items' })
+  @Field((type) => [Item], { nullable: 'items' })
   items: Item[];
 }

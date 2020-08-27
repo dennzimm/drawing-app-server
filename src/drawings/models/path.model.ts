@@ -4,7 +4,7 @@ import { IsOptional } from 'class-validator';
 @InputType('PathInput')
 @ObjectType()
 export class Path {
-  @Field(type => Float)
+  @Field((type) => Float)
   strokeWidth: number;
 
   @IsOptional()
@@ -23,6 +23,6 @@ export class Path {
   blendMode?: string;
 
   @IsOptional()
-  @Field(type => Boolean, { defaultValue: false, nullable: true })
+  @Field((type) => Boolean, { defaultValue: false, nullable: true })
   closed?: boolean;
 }

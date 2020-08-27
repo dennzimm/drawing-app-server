@@ -17,48 +17,48 @@ import { UserIdArgs } from './args/user-id.args';
 @InputType('PencilDrawInput')
 @ObjectType('PencilDraw')
 export class PencilDrawActionPayload extends DrawingActionPayload {
-  @Field(type => Path)
+  @Field((type) => Path)
   path: Path;
 
-  @Field(type => Point)
+  @Field((type) => Point)
   point: Point;
 }
 
 @InputType('BrushDrawInput')
 @ObjectType('BrushDraw')
 export class BrushDrawActionPayload extends DrawingActionPayload {
-  @Field(type => Path)
+  @Field((type) => Path)
   path: Path;
 
   @IsOptional()
-  @Field(type => Point, { nullable: true })
+  @Field((type) => Point, { nullable: true })
   delta: Point;
 
   @IsOptional()
-  @Field(type => Point, { nullable: true })
+  @Field((type) => Point, { nullable: true })
   middlePoint: Point;
 
   @IsOptional()
-  @Field(type => Point, { nullable: true })
+  @Field((type) => Point, { nullable: true })
   singlePoint?: Point;
 }
 
 @InputType('EraseInput')
 @ObjectType('Erase')
 export class EraseActionPayload extends DrawingActionPayload {
-  @Field(type => Path)
+  @Field((type) => Path)
   path: Path;
 
-  @Field(type => Point)
+  @Field((type) => Point)
   point: Point;
 }
 
 @ObjectType()
 export class DrawingAction {
-  @Field(type => ActionType)
+  @Field((type) => ActionType)
   action: ActionType;
 
-  @Field(type => DrawingActionDataNode)
+  @Field((type) => DrawingActionDataNode)
   node: typeof DrawingActionDataNode;
 }
 

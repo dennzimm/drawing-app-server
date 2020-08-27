@@ -26,7 +26,7 @@ export class DrawingActionResolver {
     private drawingActionService: DrawingActionService,
   ) {}
 
-  @Mutation(returns => Boolean)
+  @Mutation((returns) => Boolean)
   async pencilDraw(
     @Args('data') data: PencilDrawActionPayload,
     @Args('user') { userId }: UserIdInput,
@@ -50,7 +50,7 @@ export class DrawingActionResolver {
     }
   }
 
-  @Mutation(returns => Boolean)
+  @Mutation((returns) => Boolean)
   async brushDraw(
     @Args('data') data: BrushDrawActionPayload,
     @Args('user') { userId }: UserIdInput,
@@ -74,7 +74,7 @@ export class DrawingActionResolver {
     }
   }
 
-  @Mutation(returns => Boolean)
+  @Mutation((returns) => Boolean)
   async erase(
     @Args('data') data: EraseActionPayload,
     @Args('user') { userId }: UserIdInput,
@@ -98,7 +98,7 @@ export class DrawingActionResolver {
     }
   }
 
-  @Subscription(returns => DrawingAction, {
+  @Subscription((returns) => DrawingAction, {
     filter: (
       { drawingActionPublished }: PublishDrawingActionPayload,
       { userId, drawingName }: DrawingActionArgs,

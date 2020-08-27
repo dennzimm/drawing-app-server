@@ -6,10 +6,10 @@ import { UserIdArgs } from './args/user-id.args';
 
 @ObjectType()
 export class ItemMutation {
-  @Field(type => MutationType)
+  @Field((type) => MutationType)
   mutation: MutationType;
 
-  @Field(type => Item)
+  @Field((type) => Item)
   node: Item;
 }
 

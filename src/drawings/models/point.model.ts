@@ -4,25 +4,25 @@ import { IsOptional } from 'class-validator';
 @InputType('PointInput')
 @ObjectType()
 export class Point {
-  @Field(type => Float)
+  @Field((type) => Float)
   x: number;
 
-  @Field(type => Float)
+  @Field((type) => Float)
   y: number;
 
   @IsOptional()
-  @Field(type => Float)
+  @Field((type) => Float)
   angle?: number;
 
   @IsOptional()
-  @Field(type => Float)
+  @Field((type) => Float)
   angleInRadians?: number;
 
   @IsOptional()
-  @Field(type => Float)
+  @Field((type) => Float)
   length?: number;
 
   @IsOptional()
-  @Field(type => Float)
+  @Field((type) => Float)
   quadrant?: number;
 }
