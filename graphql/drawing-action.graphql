@@ -1,43 +1,53 @@
+fragment AllPointData on Point {
+  x
+  y
+  angle
+  angleInRadians
+  length
+  quadrant
+}
+
+fragment PointCoordinates on Point {
+  x
+  y
+}
+
 fragment PencilDrawData on PencilDraw {
   layerID
   itemID
-  segment {
-    point {
-      x
-      y
-    }
+  point {
+    ...PointCoordinates
   }
   path {
     strokeWidth
     strokeColor
-    strokeJoin
-    strokeCap
   }
 }
 
 fragment BrushDrawData on BrushDraw {
   layerID
   itemID
-  segments {
-    point {
-      x
-      y
-    }
+  delta {
+    ...AllPointData
+  }
+  middlePoint {
+    ...AllPointData
+  }
+  singlePoint {
+    ...PointCoordinates
   }
   path {
     strokeWidth
-    strokeColor
+    fillColor
+    closed
   }
 }
 
 fragment EraseData on Erase {
   layerID
   itemID
-  segment {
-    point {
-      x
-      y
-    }
+  point {
+    ...PointCoordinates
   }
   path {
     strokeWidth
@@ -51,7 +61,7 @@ mutation PencilDraw {
     data: {
       layerID: "layer1"
       itemID: "item00123"
-      segment: { point: { x: 44, y: 89 } }
+      point: { x: 44, y: 89 }
       path: {
         strokeWidth: 2
         strokeColor: "#feebc8"
@@ -69,11 +79,8 @@ mutation BrushDraw {
     data: {
       layerID: "layer1"
       itemID: "item00123"
-      segments: [
-        { point: { x: 44, y: 89 } }
-        { point: { x: 54, y: 99 } }
-        { point: { x: 84, y: 129 } }
-      ]
+      delta: { x: 44, y: 89 }
+      middlePoint: { x: 84, y: 129 }
       path: { strokeWidth: 8, strokeColor: "#feebc8" }
     }
   )
@@ -86,7 +93,7 @@ mutation Erase {
     data: {
       layerID: "layer1"
       itemID: "item00123"
-      segment: { point: { x: 44, y: 89 } }
+      point: { x: 44, y: 89 }
       path: { strokeWidth: 24 }
     }
   )
