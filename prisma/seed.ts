@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
-import { nanoid } from 'nanoid';
 import * as dotenv from 'dotenv';
+import { nanoid } from 'nanoid';
 
 const prisma = new PrismaClient();
 

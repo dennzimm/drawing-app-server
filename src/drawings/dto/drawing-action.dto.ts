@@ -5,15 +5,14 @@ import {
   IntersectionType,
   ObjectType,
 } from '@nestjs/graphql';
+import { IsOptional } from 'class-validator';
 import { ActionType } from '../common/enums/action.enum';
 import { DrawingActionPayload } from '../models/abstract/action.model';
 import { Path } from '../models/path.model';
 import { Point } from '../models/point.model';
-import { Segment } from '../models/segment.model';
 import { DrawingActionDataNode } from '../unions/drawing-action.union';
 import { DrawingNameArgs } from './args/drawing-name.args';
 import { UserIdArgs } from './args/user-id.args';
-import { IsOptional } from 'class-validator';
 
 @InputType('PencilDrawInput')
 @ObjectType('PencilDraw')
