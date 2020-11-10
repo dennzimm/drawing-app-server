@@ -7,8 +7,6 @@ interface ConnectionParams extends Object {
   drawingID: string;
 }
 
-// const clients = new Map<any, ConnectionParams>();
-
 @Module({
   imports: [
     GraphQLModule.forRootAsync({
@@ -22,25 +20,6 @@ interface ConnectionParams extends Object {
           configService.get('PLAYGROUND_ENABLE') === '1' ? true : false,
         introspection:
           configService.get('INTROSPECTION_ENABLE') === '1' ? true : false,
-        // subscriptions: {
-        //   onConnect: (connectionParams: ConnectionParams, websocket) => {
-        //     const { userID, drawingID } = connectionParams;
-
-        //     if (!userID || !drawingID) {
-        //       throw new ForbiddenException(
-        //         'userID and drawingID must be supplied as connectionParams',
-        //       );
-        //     }
-
-        //     clients.set(websocket, {
-        //       userID,
-        //       drawingID,
-        //     });
-        //   },
-        //   onDisconnect: websocket => {
-        //     clients.delete(websocket);
-        //   },
-        // },
       }),
       inject: [ConfigService],
     }),
