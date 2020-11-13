@@ -2,11 +2,12 @@ import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 
-interface ConnectionParams extends Object {
-  userID: string;
-  drawingID: string;
-}
-
+/**
+ * The GraphQLModule is a wrapper around the Apollo server.
+ * We use this proven GraphQL package to provide a way to use GraphQL with Nest.
+ *
+ * (https://docs.nestjs.com/graphql/quick-start)
+ */
 @Module({
   imports: [
     GraphQLModule.forRootAsync({
