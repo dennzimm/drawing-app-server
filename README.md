@@ -1,24 +1,30 @@
 # Drawing App Server
+---
 
-## Description:
+## Prerequisite
 
-...TBD
+- [Node.js](https://nodejs.org/en/)
+- [Docker](https://www.docker.com/get-started)
+- [make](https://www.gnu.org/software/make/)
 
-## Installation
+## Preparations
 
-```bash
-$ npm install
-```
+- **run** `make setup`
+- **fill** the `.env`-files (**in project root & /prisma**) with your configuration or leave it as it is (_default configurations_)
 
-## Running the app
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**~~ OR ~~**
 
-```bash
-# development
-$ npm run start
+- **copy** `example.env` to `.env` (**project root**)
+- **copy** `example.env` to `.env` (**/prisma**)
+- **fill** the `.env`-files (**in project root & /prisma**) with your configuration or leave it as it is (_default configurations_)
 
-# watch mode
-$ npm run start:dev
+## How to run this project (in production mode)
 
-# production mode
-$ npm run start:prod
-```
+- **run** `make start` **or** `docker-compose up -d --build`
+- **open** the browser and go to `http://localhost:5000` to see the **app**
+- **open** the browser and go to `http://localhost:5000/graphql` to see the **GraphQL-Playground**
+
+
+## How to stop this project
+
+- **run** `make stop` **or** `docker-compose stop`
