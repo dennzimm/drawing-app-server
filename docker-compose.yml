@@ -1,14 +1,35 @@
 version: '3.7'
 services:
+  prisma-migrate:
+    container_name: prisma-migrate
+    build:
+      context: prisma
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+    depends_on:
+      - postgres
+    networks:
+      - webnet
+
   nest-api:
     container_name: nest-api
     build:
       context: .
       dockerfile: Dockerfile
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
     ports:
-      - 3000:3000
+      - ${PORT}:${PORT}
     depends_on:
+      - prisma-migrate
       - postgres
+      - redis
+    links:
+      - redis
+    networks:
+      - webnet
     env_file:
       - .env
 
@@ -24,7 +45,19 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - postgres:/var/lib/postgresql/data
+    networks:
+      - webnet
+
+  redis:
+    image: 'redis:alpine'
+    ports:
+      - 6379:6379
+    networks:
+      - webnet
 
 volumes:
   postgres:
     name: nest-db
+
+networks:
+  webnet:
