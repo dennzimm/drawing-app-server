@@ -14,6 +14,13 @@ import { DrawingActionDataNode } from '../unions/drawing-action.union';
 import { DrawingNameArgs } from './args/drawing-name.args';
 import { UserIdArgs } from './args/user-id.args';
 
+/**
+ * PencilDrawActionPayload InputType & ObjectType
+ *
+ * @export
+ * @class PencilDrawActionPayload
+ * @extends {DrawingActionPayload}
+ */
 @InputType('PencilDrawInput')
 @ObjectType('PencilDraw')
 export class PencilDrawActionPayload extends DrawingActionPayload {
@@ -24,6 +31,13 @@ export class PencilDrawActionPayload extends DrawingActionPayload {
   point: Point;
 }
 
+/**
+ * BrushDrawActionPayload InputType & ObjectType
+ *
+ * @export
+ * @class BrushDrawActionPayload
+ * @extends {DrawingActionPayload}
+ */
 @InputType('BrushDrawInput')
 @ObjectType('BrushDraw')
 export class BrushDrawActionPayload extends DrawingActionPayload {
@@ -43,6 +57,13 @@ export class BrushDrawActionPayload extends DrawingActionPayload {
   singlePoint?: Point;
 }
 
+/**
+ * EraseActionPayload InputType & ObjectType
+ *
+ * @export
+ * @class EraseActionPayload
+ * @extends {DrawingActionPayload}
+ */
 @InputType('EraseInput')
 @ObjectType('Erase')
 export class EraseActionPayload extends DrawingActionPayload {
@@ -53,6 +74,12 @@ export class EraseActionPayload extends DrawingActionPayload {
   point: Point;
 }
 
+/**
+ * DrawingAction ObjectType
+ *
+ * @export
+ * @class DrawingAction
+ */
 @ObjectType()
 export class DrawingAction {
   @Field((type) => ActionType)
@@ -62,6 +89,16 @@ export class DrawingAction {
   node: typeof DrawingActionDataNode;
 }
 
+/**
+ * DrawingActionArgs ArgsType
+ *
+ * @export
+ * @class DrawingActionArgs
+ * @extends {IntersectionType(
+ *   UserIdArgs,
+ *   DrawingNameArgs,
+ * )}
+ */
 @ArgsType()
 export class DrawingActionArgs extends IntersectionType(
   UserIdArgs,

@@ -4,6 +4,12 @@ import { Item } from '../models/item.model';
 import { DrawingNameArgs } from './args/drawing-name.args';
 import { UserIdArgs } from './args/user-id.args';
 
+/**
+ * ItemMutation ObjectType
+ *
+ * @export
+ * @class ItemMutation
+ */
 @ObjectType()
 export class ItemMutation {
   @Field((type) => MutationType)
@@ -13,6 +19,16 @@ export class ItemMutation {
   node: Item;
 }
 
+/**
+ * ItemMutatedArgs ArgsType
+ *
+ * @export
+ * @class ItemMutatedArgs
+ * @extends {IntersectionType(
+ *   UserIdArgs,
+ *   DrawingNameArgs,
+ * )}
+ */
 @ArgsType()
 export class ItemMutatedArgs extends IntersectionType(
   UserIdArgs,
