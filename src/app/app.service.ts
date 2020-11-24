@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 /**
  * The AppService provides only one method: isOnline.
- * In general, the business logic of resolvers is outsourced to service classes.
+ * The business logic of the AppResolver is outsourced to this service class.
  *
  * @export
  * @class AppService
