@@ -13,7 +13,10 @@ import { ConfigModule as NestConfigModule } from '@nestjs/config';
  * The @Global() decorator makes the module global-scoped.
  * Global modules should be registered only once, generally by the root or core module.
  *
- * (https://docs.nestjs.com/techniques/configuration#configuration)
+ * (see https://docs.nestjs.com/techniques/configuration#configuration)
+ *
+ * @export
+ * @class ConfigModule
  */
 @Global()
 @Module({
