@@ -9,10 +9,25 @@ import {
 } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 
+/**
+ * This DrawingService provides CRUD methods for Drawings.
+ * By using the PrismaService it is possible to communicate with the database.
+ * The business logic of the DrawingResolver is outsourced to this service class.
+ *
+ * @export
+ * @class DrawingService
+ */
 @Injectable()
 export class DrawingService {
   constructor(private readonly prisma: PrismaService) {}
 
+  /**
+   * Find zero or one Drawing.
+   *
+   * @param {DrawingWhereUniqueInput} drawingWhereUniqueInput
+   * @return {*}  {(Promise<Drawing | null>)}
+   * @memberof DrawingService
+   */
   async drawing(
     drawingWhereUniqueInput: DrawingWhereUniqueInput,
   ): Promise<Drawing | null> {
@@ -22,6 +37,19 @@ export class DrawingService {
     });
   }
 
+  /**
+   * Find zero or more Drawings.
+   *
+   * @param {{
+   *       skip?: number;
+   *       take?: number;
+   *       cursor?: DrawingWhereUniqueInput;
+   *       where?: DrawingWhereInput;
+   *       orderBy?: DrawingOrderByInput;
+   *     }} [params={}]
+   * @return {*}  {Promise<Drawing[]>}
+   * @memberof DrawingService
+   */
   async drawings(
     params: {
       skip?: number;
@@ -43,12 +71,29 @@ export class DrawingService {
     });
   }
 
+  /**
+   * Create a Drawing.
+   *
+   * @param {DrawingCreateInput} data
+   * @return {*}  {Promise<Drawing>}
+   * @memberof DrawingService
+   */
   async createDrawing(data: DrawingCreateInput): Promise<Drawing> {
     return this.prisma.drawing.create({
       data,
     });
   }
 
+  /**
+   * Update one Drawing.
+   *
+   * @param {{
+   *     where: DrawingWhereUniqueInput;
+   *     data: DrawingUpdateInput;
+   *   }} params
+   * @return {*}  {Promise<Drawing>}
+   * @memberof DrawingService
+   */
   async updateDrawing(params: {
     where: DrawingWhereUniqueInput;
     data: DrawingUpdateInput;
@@ -60,6 +105,13 @@ export class DrawingService {
     });
   }
 
+  /**
+   * Delete one Drawing.
+   *
+   * @param {DrawingWhereUniqueInput} where
+   * @return {*}  {Promise<Drawing>}
+   * @memberof DrawingService
+   */
   async deleteDrawing(where: DrawingWhereUniqueInput): Promise<Drawing> {
     return this.prisma.drawing.delete({
       where,
