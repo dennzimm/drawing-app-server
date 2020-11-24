@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 /**
  * The AppResolver provides only one operation: isOnline.
  * This operation can be used to check whether the server is reachable.
+ * The business logic of this resolver is outsourced to the AppService class.
  *
  * Resolvers provide the instructions for turning a GraphQL operation
  * (a query, mutation, or subscription) into data. They return the same
