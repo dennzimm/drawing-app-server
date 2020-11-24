@@ -6,6 +6,12 @@ import {
   EraseActionPayload,
 } from '../dto/drawing-action.dto';
 
+/**
+ * This DrawingActionDataNode union is specified to define the different
+ * return values of the DrawingActionDataNode.
+ *
+ * A union is used to indicate that a field can have multiple return values.
+ */
 export const DrawingActionDataNode = createUnionType({
   name: 'DrawingActionDataNode',
   types: () => [

@@ -2,13 +2,12 @@ import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 
-interface ConnectionParams extends Object {
-  userID: string;
-  drawingID: string;
-}
-
-// const clients = new Map<any, ConnectionParams>();
-
+/**
+ * The GraphQLModule is a wrapper around the Apollo server.
+ * We use this proven GraphQL package to provide a way to use GraphQL with Nest.
+ *
+ * (see https://docs.nestjs.com/graphql/quick-start)
+ */
 @Module({
   imports: [
     GraphQLModule.forRootAsync({
@@ -22,25 +21,6 @@ interface ConnectionParams extends Object {
           configService.get('PLAYGROUND_ENABLE') === '1' ? true : false,
         introspection:
           configService.get('INTROSPECTION_ENABLE') === '1' ? true : false,
-        // subscriptions: {
-        //   onConnect: (connectionParams: ConnectionParams, websocket) => {
-        //     const { userID, drawingID } = connectionParams;
-
-        //     if (!userID || !drawingID) {
-        //       throw new ForbiddenException(
-        //         'userID and drawingID must be supplied as connectionParams',
-        //       );
-        //     }
-
-        //     clients.set(websocket, {
-        //       userID,
-        //       drawingID,
-        //     });
-        //   },
-        //   onDisconnect: websocket => {
-        //     clients.delete(websocket);
-        //   },
-        // },
       }),
       inject: [ConfigService],
     }),
