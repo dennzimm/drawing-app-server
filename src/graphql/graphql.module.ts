@@ -6,7 +6,7 @@ import { GraphQLModule } from '@nestjs/graphql';
  * The GraphQLModule is a wrapper around the Apollo server.
  * We use this proven GraphQL package to provide a way to use GraphQL with Nest.
  *
- * (https://docs.nestjs.com/graphql/quick-start)
+ * (see https://docs.nestjs.com/graphql/quick-start)
  */
 @Module({
   imports: [
