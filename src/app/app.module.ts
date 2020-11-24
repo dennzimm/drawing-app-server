@@ -14,6 +14,10 @@ import { AppService } from './app.service';
  *
  * Within this module all other modules, services or providers are imported.
  *
+ * We need to register the services and resolvers with Nest so that it
+ * can perform the injection. We do this by adding the services and resolvers
+ * to the providers array of the @Module() decorator.
+ *
  * (see https://docs.nestjs.com/modules)
  *
  * @export
