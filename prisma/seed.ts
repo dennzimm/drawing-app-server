@@ -4,6 +4,9 @@ import { nanoid } from 'nanoid';
 
 const prisma = new PrismaClient();
 
+/**
+ * This function will seed the database (for development).
+ */
 async function main() {
   dotenv.config();
   console.log('Seeding...');
@@ -50,7 +53,7 @@ async function main() {
 }
 
 main()
-  .catch(e => console.error(e))
+  .catch((e) => console.error(e))
   .finally(async () => {
     await prisma.$disconnect();
   });
