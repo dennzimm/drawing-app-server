@@ -12,7 +12,7 @@
 
 ## Preparations
 
-- **run** `make setup`
+- **run** `make sh setup.sh`
 - **fill** the `.env`-files (**in project root & /prisma**) with your configuration or leave it as it is (_default configurations_)
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**~~ OR ~~**
